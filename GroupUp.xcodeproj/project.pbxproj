@@ -13,6 +13,14 @@
 		CC56C89C1E7D46F100AAEE22 /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC56C89B1E7D46F100AAEE22 /* LoginTextField.swift */; };
 		CC56C89F1E7D576000AAEE22 /* CreateAccountTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC56C89E1E7D576000AAEE22 /* CreateAccountTextField.swift */; };
 		CC56C8C11E7D62DA00AAEE22 /* CreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC56C8C01E7D62DA00AAEE22 /* CreateAccountViewController.swift */; };
+		CCC4DF611E7E587D000B35FB /* settings_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = CCC4DF601E7E587D000B35FB /* settings_icon.png */; };
+		CCC4DF651E7E6BD5000B35FB /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC4DF641E7E6BD5000B35FB /* MainMenuViewController.swift */; };
+		CCC4DF671E7E6E77000B35FB /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC4DF661E7E6E77000B35FB /* SettingsViewController.swift */; };
+		CCC4DF691E7E729F000B35FB /* CreateGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC4DF681E7E729F000B35FB /* CreateGroupViewController.swift */; };
+		CCC4DF6B1E7E7FC7000B35FB /* GroupsListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC4DF6A1E7E7FC7000B35FB /* GroupsListTableViewController.swift */; };
+		CCC4DF6D1E7E8051000B35FB /* GroupDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC4DF6C1E7E8051000B35FB /* GroupDetailsViewController.swift */; };
+		CCC4DF701E7E8611000B35FB /* AlarmListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC4DF6F1E7E8611000B35FB /* AlarmListViewController.swift */; };
+		CCC4DF731E7E87D1000B35FB /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCC4DF721E7E87D1000B35FB /* MapKit.framework */; };
 		CCE2FAD21E74A4E900440D21 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE2FAD11E74A4E900440D21 /* AppDelegate.swift */; };
 		CCE2FAD71E74A4E900440D21 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CCE2FAD51E74A4E900440D21 /* Main.storyboard */; };
 		CCE2FADA1E74A4E900440D21 /* GroupUp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CCE2FAD81E74A4E900440D21 /* GroupUp.xcdatamodeld */; };
@@ -27,6 +35,14 @@
 		CC56C89B1E7D46F100AAEE22 /* LoginTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginTextField.swift; path = GroupUp/LoginTextField.swift; sourceTree = "<group>"; };
 		CC56C89E1E7D576000AAEE22 /* CreateAccountTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateAccountTextField.swift; path = GroupUp/CreateAccountTextField.swift; sourceTree = "<group>"; };
 		CC56C8C01E7D62DA00AAEE22 /* CreateAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateAccountViewController.swift; path = GroupUp/CreateAccountViewController.swift; sourceTree = "<group>"; };
+		CCC4DF601E7E587D000B35FB /* settings_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = settings_icon.png; path = GroupUp/settings_icon.png; sourceTree = "<group>"; };
+		CCC4DF641E7E6BD5000B35FB /* MainMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainMenuViewController.swift; path = GroupUp/MainMenuViewController.swift; sourceTree = "<group>"; };
+		CCC4DF661E7E6E77000B35FB /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = GroupUp/SettingsViewController.swift; sourceTree = "<group>"; };
+		CCC4DF681E7E729F000B35FB /* CreateGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateGroupViewController.swift; path = GroupUp/CreateGroupViewController.swift; sourceTree = "<group>"; };
+		CCC4DF6A1E7E7FC7000B35FB /* GroupsListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GroupsListTableViewController.swift; path = GroupUp/GroupsListTableViewController.swift; sourceTree = "<group>"; };
+		CCC4DF6C1E7E8051000B35FB /* GroupDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GroupDetailsViewController.swift; path = GroupUp/GroupDetailsViewController.swift; sourceTree = "<group>"; };
+		CCC4DF6F1E7E8611000B35FB /* AlarmListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlarmListViewController.swift; path = GroupUp/AlarmListViewController.swift; sourceTree = "<group>"; };
+		CCC4DF721E7E87D1000B35FB /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		CCE2FACE1E74A4E900440D21 /* GroupUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GroupUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCE2FAD11E74A4E900440D21 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CCE2FAD61E74A4E900440D21 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -41,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCC4DF731E7E87D1000B35FB /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +69,7 @@
 			children = (
 				CC56C8951E7BF8E300AAEE22 /* login_background.png */,
 				CC56C8961E7BF8E300AAEE22 /* logo_square.png */,
+				CCC4DF601E7E587D000B35FB /* settings_icon.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -59,8 +77,14 @@
 		CC56C89D1E7D568D00AAEE22 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				CCC4DF6F1E7E8611000B35FB /* AlarmListViewController.swift */,
 				CC56C8C01E7D62DA00AAEE22 /* CreateAccountViewController.swift */,
+				CCC4DF681E7E729F000B35FB /* CreateGroupViewController.swift */,
+				CCC4DF6C1E7E8051000B35FB /* GroupDetailsViewController.swift */,
+				CCC4DF6A1E7E7FC7000B35FB /* GroupsListTableViewController.swift */,
 				CC2FA0B31E7BF5F500FCC57C /* LoginViewController.swift */,
+				CCC4DF641E7E6BD5000B35FB /* MainMenuViewController.swift */,
+				CCC4DF661E7E6E77000B35FB /* SettingsViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -74,14 +98,33 @@
 			name = TextFields;
 			sourceTree = "<group>";
 		};
+		CCC4DF6E1E7E8099000B35FB /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				CCE2FADD1E74A4E900440D21 /* LaunchScreen.storyboard */,
+				CCE2FAD51E74A4E900440D21 /* Main.storyboard */,
+			);
+			name = Storyboards;
+			sourceTree = "<group>";
+		};
+		CCC4DF711E7E87D1000B35FB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CCC4DF721E7E87D1000B35FB /* MapKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CCE2FAC51E74A4E900440D21 = {
 			isa = PBXGroup;
 			children = (
+				CCC4DF6E1E7E8099000B35FB /* Storyboards */,
 				CCE2FAD01E74A4E900440D21 /* GroupUp */,
 				CC2FA0AE1E7BE8F800FCC57C /* Images */,
-				CCE2FACF1E74A4E900440D21 /* Products */,
 				CC56C8A11E7D580600AAEE22 /* TextFields */,
 				CC56C89D1E7D568D00AAEE22 /* ViewControllers */,
+				CCE2FACF1E74A4E900440D21 /* Products */,
+				CCC4DF711E7E87D1000B35FB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -100,8 +143,6 @@
 				CCE2FADB1E74A4E900440D21 /* Assets.xcassets */,
 				CCE2FAD81E74A4E900440D21 /* GroupUp.xcdatamodeld */,
 				CCE2FAE01E74A4E900440D21 /* Info.plist */,
-				CCE2FADD1E74A4E900440D21 /* LaunchScreen.storyboard */,
-				CCE2FAD51E74A4E900440D21 /* Main.storyboard */,
 			);
 			path = GroupUp;
 			sourceTree = "<group>";
@@ -139,6 +180,11 @@
 					CCE2FACD1E74A4E900440D21 = {
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -166,6 +212,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCE2FADF1E74A4E900440D21 /* LaunchScreen.storyboard in Resources */,
+				CCC4DF611E7E587D000B35FB /* settings_icon.png in Resources */,
 				CCE2FADC1E74A4E900440D21 /* Assets.xcassets in Resources */,
 				CC56C8981E7BF8E300AAEE22 /* logo_square.png in Resources */,
 				CCE2FAD71E74A4E900440D21 /* Main.storyboard in Resources */,
@@ -181,11 +228,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC56C8C11E7D62DA00AAEE22 /* CreateAccountViewController.swift in Sources */,
+				CCC4DF6B1E7E7FC7000B35FB /* GroupsListTableViewController.swift in Sources */,
 				CC2FA0B41E7BF5F500FCC57C /* LoginViewController.swift in Sources */,
 				CC56C89C1E7D46F100AAEE22 /* LoginTextField.swift in Sources */,
+				CCC4DF701E7E8611000B35FB /* AlarmListViewController.swift in Sources */,
 				CCE2FADA1E74A4E900440D21 /* GroupUp.xcdatamodeld in Sources */,
+				CCC4DF6D1E7E8051000B35FB /* GroupDetailsViewController.swift in Sources */,
+				CCC4DF651E7E6BD5000B35FB /* MainMenuViewController.swift in Sources */,
+				CCC4DF691E7E729F000B35FB /* CreateGroupViewController.swift in Sources */,
 				CCE2FAD21E74A4E900440D21 /* AppDelegate.swift in Sources */,
 				CC56C89F1E7D576000AAEE22 /* CreateAccountTextField.swift in Sources */,
+				CCC4DF671E7E6E77000B35FB /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,6 +251,7 @@
 				CCE2FAD61E74A4E900440D21 /* Base */,
 			);
 			name = Main.storyboard;
+			path = GroupUp;
 			sourceTree = "<group>";
 		};
 		CCE2FADD1E74A4E900440D21 /* LaunchScreen.storyboard */ = {
@@ -206,6 +260,7 @@
 				CCE2FADE1E74A4E900440D21 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			path = GroupUp;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
