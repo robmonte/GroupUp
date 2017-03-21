@@ -283,10 +283,10 @@
             </objects>
             <point key="canvasLocation" x="3097" y="36"/>
         </scene>
-        <!--View Controller-->
+        <!--Map View Controller-->
         <scene sceneID="RYj-L8-QQ0">
             <objects>
-                <viewController id="s6n-r2-s6v" sceneMemberID="viewController">
+                <viewController id="s6n-r2-s6v" customClass="MapViewController" customModule="GroupUp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Crl-vx-Jpm"/>
                         <viewControllerLayoutGuide type="bottom" id="2h8-aZ-jPA"/>
@@ -302,6 +302,9 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="mapView" destination="ANa-wX-Jhv" id="Qt1-qX-fpu"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AbW-vJ-kpC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
