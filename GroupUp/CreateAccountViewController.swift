@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class CreateAccountViewController: UIViewController, UITextFieldDelegate {
 
@@ -17,6 +18,8 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var confirmField: CreateAccountTextField!
     
     @IBOutlet weak var createButton: UIButton!
+    
+    private var accounts = [NSManagedObject]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +70,71 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated:true)
+    }
+    
+    @IBAction func saveAccountCore(_ sender: Any) {
+        if firstField.text! == "" || lastField.text! == "" || passwordField.text! == "" || confirmField.text! == "" || usernameField.text! == "" {
+            let alert = UIAlertController(title:"Invalid input", message:"You must enter a value for all fields.", preferredStyle:UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
+            self.present(alert, animated:true)
+        } else if passwordField.text! != confirmField.text! {
+            let alert = UIAlertController(title:"Invalid input", message:"Passwords do not match.", preferredStyle:UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
+            self.present(alert, animated:true)
+        } else if checkDuplicateUsername() != 0 {
+            let alert = UIAlertController(title:"Invalid input", message:"Username Already Exists.", preferredStyle:UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
+            self.present(alert, animated:true)
+
+        }
+        else {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            let managedContext = appDelegate.persistentContainer.viewContext
+            let entity =  NSEntityDescription.entity(forEntityName: "Account", in: managedContext)
+            let candidate = NSManagedObject(entity:entity!, insertInto:managedContext)
+            
+            candidate.setValue(usernameField.text!, forKey:"username")
+            candidate.setValue(firstField.text!, forKey:"firstname")
+            candidate.setValue(lastField.text!, forKey:"lastname")
+            candidate.setValue(passwordField.text!, forKey:"password")
+            
+            do {
+                try managedContext.save()
+            }
+            catch {
+                let nserror = error as NSError
+                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+                abort()
+            }
+            
+            _ = navigationController?.popViewController(animated:true)
+        }
+    }
+    
+    func checkDuplicateUsername() -> Int {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Account")
+        fetchRequest.predicate = NSPredicate(format: "username == %@", usernameField.text!)
+        var fetchedResults:[NSManagedObject]? = nil
+        
+        do {
+            print("trying")
+            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
+        }
+        catch {
+            let nserror = error as NSError
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
+        
+        if let results = fetchedResults {
+            accounts = results
+        } else {
+            print("Could Not Fetch")
+        }
+        
+        return accounts.count
     }
     
     /*

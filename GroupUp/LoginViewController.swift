@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
 
@@ -15,6 +16,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var createAccountButton: UIButton!
+    
+    private var accounts = [NSManagedObject]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,6 +56,42 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
+    }
+    
+    @IBAction func performLogin(_ sender: Any) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Account")
+        fetchRequest.predicate = NSPredicate(format: "username == %@", usernameField.text!)
+        var fetchedResults:[NSManagedObject]? = nil
+        
+        do {
+            print("trying")
+            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
+        }
+        catch {
+            let nserror = error as NSError
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
+        
+        if let results = fetchedResults {
+            accounts = results
+        } else {
+            print("Could Not Fetch")
+        }
+        
+        if accounts.count == 0 {
+            let alert = UIAlertController(title:"Invalid Username", message:"Username Does Not Exist.", preferredStyle:UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
+            self.present(alert, animated:true)
+        } else if accounts[0].value(forKey: "password") as! String == passwordField.text! {
+            performSegue(withIdentifier: "loginSegue", sender: nil)
+        } else {
+            let alert = UIAlertController(title:"Invalid Password", message:"Please enter correct password.", preferredStyle:UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
+            self.present(alert, animated:true)
+        }
     }
     
     //    override func viewWillDisappear(_ animated: Bool) {
