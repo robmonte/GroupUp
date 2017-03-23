@@ -77,6 +77,10 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
             let alert = UIAlertController(title:"Invalid input", message:"You must enter a value for all fields.", preferredStyle:UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
             self.present(alert, animated:true)
+        } else if passwordField.text!.characters.count < 8 {
+            let alert = UIAlertController(title:"Weak Password", message:"Password must be 8 characters long.", preferredStyle:UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
+            self.present(alert, animated:true)
         } else if passwordField.text! != confirmField.text! {
             let alert = UIAlertController(title:"Invalid input", message:"Passwords do not match.", preferredStyle:UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
@@ -85,7 +89,6 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
             let alert = UIAlertController(title:"Invalid input", message:"Username Already Exists.", preferredStyle:UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
             self.present(alert, animated:true)
-
         }
         else {
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
