@@ -10,11 +10,18 @@ import UIKit
 import MapKit
 import CoreLocation
 
+
+protocol HandleMapSearch {
+    func dropPinZoomIn(placemark:MKPlacemark)
+}
+
 class MapViewController: UIViewController, CLLocationManagerDelegate{
 
     @IBOutlet weak var mapView: MKMapView!
     var locationManager: CLLocationManager!
-    var firstLocUpdate = true
+    var locationSearchController: UISearchController?
+    var selectedPin:MKPlacemark? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,8 +30,27 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
             locationManager.requestAlwaysAuthorization()
-            locationManager.startUpdatingLocation()
+            locationManager.requestLocation()
         }
+        
+        let locationSearchTable = storyboard!.instantiateViewController(withIdentifier: "LocationTableViewController") as! LocationTableViewController
+        locationSearchController = UISearchController(searchResultsController: locationSearchTable)
+        locationSearchController?.searchResultsUpdater = locationSearchTable
+        
+        let searchBar = locationSearchController!.searchBar
+        searchBar.sizeToFit()
+        searchBar.placeholder = "Search for places"
+        navigationItem.titleView = locationSearchController?.searchBar
+        
+        locationSearchController?.hidesNavigationBarDuringPresentation = false
+        locationSearchController?.dimsBackgroundDuringPresentation = true
+        definesPresentationContext = true
+        
+        locationSearchTable.mapView = mapView
+        
+        locationSearchTable.handleMapSearchDelegate = self
+        
+        mapView.delegate = self
 
         // Do any additional setup after loading the view.
     }
@@ -35,16 +61,26 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if firstLocUpdate {
             let location = locations.last
         
             let center = CLLocationCoordinate2D(latitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!)
             let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         
             self.mapView.setRegion(region, animated: true)
-            firstLocUpdate = false
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Failed with error")
+    }
+    
+    func getDirections(){
+        if let selectedPin = selectedPin {
+            let mapItem = MKMapItem(placemark: selectedPin)
+            let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
+            mapItem.openInMaps(launchOptions: launchOptions)
         }
     }
+
     
 
     /*
@@ -57,4 +93,44 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
     }
     */
 
+}
+
+extension MapViewController: HandleMapSearch {
+    func dropPinZoomIn(placemark:MKPlacemark){
+        // cache the pin
+        selectedPin = placemark
+        // clear existing pins
+        mapView.removeAnnotations(mapView.annotations)
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = placemark.coordinate
+        annotation.title = placemark.name
+        if let city = placemark.locality,
+            let state = placemark.administrativeArea {
+            annotation.subtitle = "\(city) \(state)"
+        }
+        mapView.addAnnotation(annotation)
+        let span = MKCoordinateSpanMake(0.05, 0.05)
+        let region = MKCoordinateRegionMake(placemark.coordinate, span)
+        mapView.setRegion(region, animated: true)
+    }
+}
+
+extension MapViewController : MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?{
+        if annotation is MKUserLocation {
+            //return nil so map view draws "blue dot" for standard user location
+            return nil
+        }
+        let reuseId = "pin"
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+        pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+        pinView?.pinTintColor = UIColor.orange
+        pinView?.canShowCallout = true
+        let smallSquare = CGSize(width: 30, height: 30)
+        let button = UIButton(frame: CGRect(origin: CGPoint(x: 0,y: 0), size: smallSquare))
+        button.backgroundColor = UIColor.blue
+        button.addTarget(self, action: #selector(MapViewController.getDirections), for: .touchUpInside)
+        pinView?.leftCalloutAccessoryView = button
+        return pinView
+    }
 }
