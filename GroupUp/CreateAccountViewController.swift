@@ -2,7 +2,7 @@
 //  CreateAccountViewController.swift
 //  GroupUp
 //
-//  Created by Robert Montefusco on 3/18/17.
+//  Created by Michael McCrory on 3/20/17.
 //  Copyright © 2017 GroupUp. All rights reserved.
 //
 
@@ -77,16 +77,19 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
             let alert = UIAlertController(title:"Invalid input", message:"You must enter a value for all fields.", preferredStyle:UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
             self.present(alert, animated:true)
-        } else if passwordField.text!.characters.count < 8 {
-            let alert = UIAlertController(title:"Weak Password", message:"Password must be 8 characters long.", preferredStyle:UIAlertControllerStyle.alert)
+        }
+        else if passwordField.text!.characters.count < 8 {
+            let alert = UIAlertController(title:"Weak Password", message:"Password must be at least 8 characters long.", preferredStyle:UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
             self.present(alert, animated:true)
-        } else if passwordField.text! != confirmField.text! {
+        }
+        else if passwordField.text! != confirmField.text! {
             let alert = UIAlertController(title:"Invalid input", message:"Passwords do not match.", preferredStyle:UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
             self.present(alert, animated:true)
-        } else if checkDuplicateUsername() != 0 {
-            let alert = UIAlertController(title:"Invalid input", message:"Username Already Exists.", preferredStyle:UIAlertControllerStyle.alert)
+        }
+        else if checkDuplicateUsername() != 0 {
+            let alert = UIAlertController(title:"Invalid input", message:"Username already exists.", preferredStyle:UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
             self.present(alert, animated:true)
         }
@@ -97,8 +100,8 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
             let candidate = NSManagedObject(entity:entity!, insertInto:managedContext)
             
             candidate.setValue(usernameField.text!, forKey:"username")
-            candidate.setValue(firstField.text!, forKey:"firstname")
-            candidate.setValue(lastField.text!, forKey:"lastname")
+            candidate.setValue(firstField.text!, forKey:"firstName")
+            candidate.setValue(lastField.text!, forKey:"lastName")
             candidate.setValue(passwordField.text!, forKey:"password")
             
             do {
@@ -134,7 +137,7 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
         if let results = fetchedResults {
             accounts = results
         } else {
-            print("Could Not Fetch")
+            print("Could not fetch")
         }
         
         return accounts.count

@@ -22,16 +22,21 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let defaults = UserDefaults.standard
+        
         usernameField.delegate = self
         passwordField.delegate = self
         
         loginButton.layer.cornerRadius = 5
+        loginButton.layer.borderWidth = 1
+        loginButton.layer.borderColor = UIColor.gray.cgColor
         
         createAccountButton.titleLabel?.textAlignment = NSTextAlignment.center
         createAccountButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         
-        usernameField.attributedPlaceholder = NSAttributedString(string: usernameField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.gray])
-        passwordField.attributedPlaceholder = NSAttributedString(string: passwordField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.gray])
+        usernameField.text = defaults.object(forKey: "rememberUsername") as! String?
+        usernameField.attributedPlaceholder = NSAttributedString(string: usernameField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.gray, NSFontAttributeName: UIFont.systemFont(ofSize: 20)])
+        passwordField.attributedPlaceholder = NSAttributedString(string: passwordField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.gray, NSFontAttributeName: UIFont.systemFont(ofSize: 20)])
     }
 
     override func didReceiveMemoryWarning() {
@@ -66,7 +71,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         var fetchedResults:[NSManagedObject]? = nil
         
         do {
-            print("trying")
             try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
         }
         catch {
@@ -82,13 +86,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
         
         if accounts.count == 0 {
-            let alert = UIAlertController(title:"Invalid Username", message:"Username Does Not Exist.", preferredStyle:UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title:"Invalid Username", message:"Username does not exist.", preferredStyle:UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
             self.present(alert, animated:true)
         } else if accounts[0].value(forKey: "password") as! String == passwordField.text! {
             performSegue(withIdentifier: "loginSegue", sender: nil)
         } else {
-            let alert = UIAlertController(title:"Invalid Password", message:"Please enter correct password.", preferredStyle:UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title:"Invalid Password", message:"Please enter the correct password.", preferredStyle:UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
             self.present(alert, animated:true)
         }
@@ -98,13 +102,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     //        self.navigationController?.setNavigationBarHidden(false, animated:true)
     //    }
 
-    /*
     // MARK: - Navigation
-
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if let destinationVC = segue.destination as? MainMenuViewController {
+            destinationVC.username = usernameField.text!
+        }
     }
-    */
 }

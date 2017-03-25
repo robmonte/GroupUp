@@ -86,11 +86,11 @@
 				CCC4DF681E7E729F000B35FB /* CreateGroupViewController.swift */,
 				CCC4DF6C1E7E8051000B35FB /* GroupDetailsViewController.swift */,
 				CCC4DF6A1E7E7FC7000B35FB /* GroupsListTableViewController.swift */,
+				50697AE41E835C5000C383FF /* LocationTableViewController.swift */,
 				CC2FA0B31E7BF5F500FCC57C /* LoginViewController.swift */,
 				CCC4DF641E7E6BD5000B35FB /* MainMenuViewController.swift */,
-				CCC4DF661E7E6E77000B35FB /* SettingsViewController.swift */,
 				50E8EEE61E80BD1600EF42B6 /* MapViewController.swift */,
-				50697AE41E835C5000C383FF /* LocationTableViewController.swift */,
+				CCC4DF661E7E6E77000B35FB /* SettingsViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -185,6 +185,7 @@
 				TargetAttributes = {
 					CCE2FACD1E74A4E900440D21 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 7WC6VRVKXY;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Maps.iOS = {
@@ -371,6 +372,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 7WC6VRVKXY;
 				INFOPLIST_FILE = GroupUp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cs378ios.GroupUp;
@@ -383,6 +385,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 7WC6VRVKXY;
 				INFOPLIST_FILE = GroupUp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cs378ios.GroupUp;

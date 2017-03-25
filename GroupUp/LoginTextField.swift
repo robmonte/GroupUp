@@ -31,9 +31,9 @@ class LoginTextField: UITextField {
         
         path.move(to:startingPoint)
         path.addLine(to:endingPoint)
-        path.lineWidth = 2.0
+        path.lineWidth = 3.0
         
-        UIColor.lightGray.setStroke()
+        UIColor.gray.setStroke()
         
         path.stroke()
     }

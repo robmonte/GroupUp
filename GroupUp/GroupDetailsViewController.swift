@@ -7,17 +7,24 @@
 //
 
 import UIKit
+import CoreData
 
 class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var groupNameLabel: UILabel!
     @IBOutlet weak var membersTable: UITableView!
+    
+    private var membersList = [String]()
+    private var groups = [NSManagedObject]()
+    public var groupName:String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         membersTable.delegate = self
         membersTable.dataSource = self
-        // Do any additional setup after loading the view.
+        groupNameLabel.text = groupName
+        setupMembersArray()
     }
     
     override func didReceiveMemoryWarning() {
@@ -31,26 +38,41 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return membersList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "membersID")
         
-        if indexPath.row == 0 {
-            cell.textLabel?.text = "John Doe"
-        }
-        else if indexPath.row == 1 {
-            cell.textLabel?.text = "Sam Sample"
-        }
-        else if indexPath.row == 2 {
-            cell.textLabel?.text = "Jane Doe"
-        }
-        else {
-            cell.textLabel?.text = "Steven Friend"
-        }
+        cell.textLabel?.text = membersList[indexPath.row]
         
         return cell
+    }
+    
+    private func setupMembersArray() {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Group")
+        fetchRequest.predicate = NSPredicate(format: "groupName == %@", groupName)
+        var fetchedResults:[NSManagedObject]? = nil
+        
+        do {
+            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
+        }
+        catch {
+            let nserror = error as NSError
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
+        
+        if let results = fetchedResults {
+            groups = results
+        } else {
+            print("Could not fetch")
+        }
+        
+        let names:String? = groups[0].value(forKey: "groupMembers") as? String
+        membersList = names!.components(separatedBy: ",")
     }
 
     /*

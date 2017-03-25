@@ -10,10 +10,22 @@ import UIKit
 
 class SettingsViewController: UIViewController {
 
+    @IBOutlet weak var rememberUsernameToggle: UISwitch!
+    public var username:String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
+        let defaults = UserDefaults.standard
+        
+        rememberUsernameToggle.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
+        let check:Bool = defaults.object(forKey: "rememberState") as? Bool ?? false
+        if check == true {
+            rememberUsernameToggle.setOn(true, animated: true)
+        }
+        else {
+            rememberUsernameToggle.setOn(false, animated: true)
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -33,7 +45,21 @@ class SettingsViewController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
-
+    
+    func switchChanged(rememberSwitch: UISwitch) {
+        let defaults = UserDefaults.standard
+        
+        if rememberSwitch.isOn {
+            defaults.set(username, forKey: "rememberUsername")
+            defaults.set(true, forKey: "rememberState")
+        }
+        else {
+            let blank:String = ""
+            defaults.set(blank, forKey: "rememberUsername")
+            defaults.set(false, forKey: "rememberState")
+        }        
+    }
+    
     /*
     // MARK: - Navigation
 

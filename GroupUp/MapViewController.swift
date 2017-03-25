@@ -51,8 +51,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
         locationSearchTable.handleMapSearchDelegate = self
         
         mapView.delegate = self
-
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -81,7 +79,13 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
         }
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated:true)
+    }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
 
     /*
     // MARK: - Navigation
@@ -100,15 +104,19 @@ extension MapViewController: HandleMapSearch {
         // cache the pin
         selectedPin = placemark
         // clear existing pins
+        
         mapView.removeAnnotations(mapView.annotations)
         let annotation = MKPointAnnotation()
+        
         annotation.coordinate = placemark.coordinate
         annotation.title = placemark.name
+        
         if let city = placemark.locality,
             let state = placemark.administrativeArea {
             annotation.subtitle = "\(city) \(state)"
         }
         mapView.addAnnotation(annotation)
+        
         let span = MKCoordinateSpanMake(0.05, 0.05)
         let region = MKCoordinateRegionMake(placemark.coordinate, span)
         mapView.setRegion(region, animated: true)
@@ -123,14 +131,18 @@ extension MapViewController : MKMapViewDelegate {
         }
         let reuseId = "pin"
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+        
         pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
         pinView?.pinTintColor = UIColor.orange
         pinView?.canShowCallout = true
+        
         let smallSquare = CGSize(width: 30, height: 30)
         let button = UIButton(frame: CGRect(origin: CGPoint(x: 0,y: 0), size: smallSquare))
+        
         button.backgroundColor = UIColor.blue
         button.addTarget(self, action: #selector(MapViewController.getDirections), for: .touchUpInside)
         pinView?.leftCalloutAccessoryView = button
+        
         return pinView
     }
 }

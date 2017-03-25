@@ -7,11 +7,16 @@
 //
 
 import UIKit
+import CoreData
 
 class GroupsListTableViewController: UITableViewController {
+    
+    private var groups = [NSManagedObject]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        loadGroups()
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -34,7 +39,7 @@ class GroupsListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 2
+        return groups.count
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -44,28 +49,46 @@ class GroupsListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "groupsListID", for: indexPath)
         
-        // Configure the cell...
-        if (indexPath.row == 0) {
-            cell.textLabel?.text = "Group 1"
-            cell.detailTextLabel?.text = "Dest: Houston, TX"
-        }
-        else {
-            cell.textLabel?.text = "Group 2"
-            cell.detailTextLabel?.text = "Dest: Cheesecake Factory"
-        }
+        let groupName:String? = groups[indexPath.row].value(forKey: "groupName") as? String
+        cell.textLabel?.text = groupName!
         
         return cell
     }
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
+    
+    func loadGroups() {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Group")
+        var fetchedResults:[NSManagedObject]? = nil
+        
+        do {
+            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
+        }
+        catch {
+            let nserror = error as NSError
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
+        
+        if let results = fetchedResults {
+            groups = results
+        } else {
+            print("Could not fetch")
+        }
     }
-    */
+    
+    // MARK: - Navigation
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+        if let destinationVC = segue.destination as? GroupDetailsViewController {
+            let index = tableView.indexPathForSelectedRow?.row
+            let groupName:String? = groups[index!].value(forKey: "groupName") as? String
+            
+            destinationVC.groupName = groupName!
+        }
+    }
 
     /*
     // Override to support conditional editing of the table view.
@@ -101,15 +124,4 @@ class GroupsListTableViewController: UITableViewController {
         return true
     }
     */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
