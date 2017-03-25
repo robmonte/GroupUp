@@ -78,9 +78,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
             mapItem.openInMaps(launchOptions: launchOptions)
         }
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated:true)
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
