@@ -74,8 +74,26 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
     func getDirections(){
         if let selectedPin = selectedPin {
             let mapItem = MKMapItem(placemark: selectedPin)
-            let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
-            mapItem.openInMaps(launchOptions: launchOptions)
+            let dirRequest = MKDirectionsRequest()
+            dirRequest.destination = mapItem
+            let src = MKMapItem.forCurrentLocation()
+            dirRequest.source = src
+            let directions = MKDirections(request: dirRequest)
+            directions.calculate() {response, error in
+                if error == nil {
+                    if response != nil {
+                        let route = response?.routes[0]
+                        self.mapView.add((route?.polyline)!)
+                        print(route?.expectedTravelTime)
+                        
+                    }
+                }
+                else {
+                    print(error?.localizedDescription ?? "Error unable to be described")
+                }
+            }
+            //let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
+           // mapItem.openInMaps(launchOptions: launchOptions)
         }
     }
     
@@ -145,5 +163,12 @@ extension MapViewController : MKMapViewDelegate {
         pinView?.leftCalloutAccessoryView = button
         
         return pinView
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKPolylineRenderer(overlay: overlay)
+        renderer.strokeColor = UIColor.blue
+        renderer.lineWidth = 3
+        return renderer
     }
 }

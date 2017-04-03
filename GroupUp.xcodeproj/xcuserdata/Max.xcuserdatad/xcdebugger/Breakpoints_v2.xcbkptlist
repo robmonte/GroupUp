@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GroupUp/MapViewController.swift"
-            timestampString = "511928286.809283"
+            timestampString = "512878486.109946"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "120"
-            endingLineNumber = "120"
-            landmarkName = "mapView(_:viewFor:)"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
+            landmarkName = "dropPinZoomIn(placemark:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
