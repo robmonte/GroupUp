@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import Firebase
 
 class MainMenuViewController: UIViewController {
     
     public var username:String = ""
+    @IBOutlet weak var usernameLabel: UILabel!
+    var handle: FIRAuthStateDidChangeListenerHandle?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,7 +22,13 @@ class MainMenuViewController: UIViewController {
     }
     
     @IBAction func logoutPressed(_ sender: Any) {
-        _ = navigationController?.popViewController(animated:true)
+        let firebaseAuth = FIRAuth.auth()
+        do {
+            try firebaseAuth?.signOut()
+            _ = navigationController?.popViewController(animated:true)
+        } catch let signOutError as NSError {
+            print ("Error signing out: %@", signOutError)
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -29,6 +38,16 @@ class MainMenuViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated:true)
+        handle = FIRAuth.auth()?.addStateDidChangeListener() { (auth, user) in
+            self.usernameLabel.text! = (user?.displayName!)!
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // [START remove_auth_listener]
+        FIRAuth.auth()?.removeStateDidChangeListener(handle!)
+        // [END remove_auth_listener]
     }
 
     // MARK: - Navigation
