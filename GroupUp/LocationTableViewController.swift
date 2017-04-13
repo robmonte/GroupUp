@@ -46,7 +46,12 @@ class LocationTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
         let selectedItem = matchingItems[indexPath.row].placemark
         cell.textLabel?.text = selectedItem.name
-        cell.detailTextLabel?.text = ""
+        let addressDict = selectedItem.addressDictionary
+        let address = addressDict?["Street"] ?? ""
+        let city = addressDict?["City"] ?? ""
+        let state = addressDict?["State"] ?? ""
+        let zip = addressDict?["ZIP"] ?? ""
+        cell.detailTextLabel?.text = "\(address) \(city) \(state) \(zip)"
         return cell
     }
     

@@ -84,7 +84,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
                     if response != nil {
                         let route = response?.routes[0]
                         self.mapView.add((route?.polyline)!)
-                        print(route?.expectedTravelTime)
+                        print(route?.expectedTravelTime ?? 0)
                         
                     }
                 }
@@ -95,6 +95,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
             //let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
            // mapItem.openInMaps(launchOptions: launchOptions)
         }
+    }
+    
+    func setRoute(){
+        return
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -124,6 +128,8 @@ extension MapViewController: HandleMapSearch {
         selectedPin = placemark
         // clear existing pins
         
+        self.mapView.removeOverlays(self.mapView.overlays)
+
         mapView.removeAnnotations(mapView.annotations)
         let annotation = MKPointAnnotation()
         
@@ -161,6 +167,17 @@ extension MapViewController : MKMapViewDelegate {
         button.backgroundColor = UIColor.blue
         button.addTarget(self, action: #selector(MapViewController.getDirections), for: .touchUpInside)
         pinView?.leftCalloutAccessoryView = button
+        
+        let setButton = UIButton(frame: CGRect(origin: CGPoint(x: 0,y: 0), size: smallSquare))
+        setButton.setTitle("Set", for: UIControlState.normal)
+        setButton.setTitleColor(UIColor.blue, for: UIControlState.normal)
+        setButton.setTitleColor(UIColor.cyan, for: UIControlState.highlighted)
+        button.addTarget(self, action: #selector(MapViewController.setRoute), for: .touchUpInside)
+        pinView?.rightCalloutAccessoryView = setButton
+        
+        
+        
+        
         
         return pinView
     }
