@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GroupUp/GroupDetailsViewController.swift"
+            timestampString = "513810677.967502"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "84"
+            endingLineNumber = "84"
+            landmarkName = "getETA(notification:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "GroupUp.GroupDetailsViewController.getETA (notification : Foundation.Notification) -&gt; ()"
+                  moduleName = "GroupUp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Max/Documents/GroupUp/GroupUp/GroupDetailsViewController.swift"
+                  timestampString = "513810941.58264"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "84"
+                  endingLineNumber = "84"
+                  offsetFromSymbolStart = "254">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "GroupUp.GroupDetailsViewController.(getETA (notification : Foundation.Notification) -&gt; ()).(implicit closure #1)"
+                  moduleName = "GroupUp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Max/Documents/GroupUp/GroupUp/GroupDetailsViewController.swift"
+                  timestampString = "513810941.586444"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "84"
+                  endingLineNumber = "84"
+                  offsetFromSymbolStart = "11">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

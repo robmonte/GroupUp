@@ -92,13 +92,44 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
                     print(error?.localizedDescription ?? "Error unable to be described")
                 }
             }
-            //let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
-           // mapItem.openInMaps(launchOptions: launchOptions)
         }
     }
     
-    func setRoute(){
-        return
+    func setRoute() {
+        if let selectedPin = selectedPin {
+            let mapItem = MKMapItem(placemark: selectedPin)
+            let dirRequest = MKDirectionsRequest()
+            dirRequest.destination = mapItem
+            let src = MKMapItem.forCurrentLocation()
+            dirRequest.source = src
+            let directions = MKDirections(request: dirRequest)
+            directions.calculate() {response, error in
+                if error == nil {
+                    if response != nil {
+                        let route = response?.routes[0]
+                        self.mapView.add((route?.polyline)!)
+                        let etaInfoDict: [String: Double] = ["ETA": (route?.expectedTravelTime)!]
+                        
+                        
+                        NotificationCenter.default.post(name: Notification.Name(rawValue: "setRoute"), object: nil, userInfo: etaInfoDict)
+                        
+                        let alertController = UIAlertController(title: "Destination Set", message: "Destination has been set", preferredStyle: UIAlertControllerStyle.alert)
+                        
+                        let OK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
+                        }
+                        
+                        alertController.addAction(OK)
+                        
+                        self.present(alertController, animated: true)
+                        
+                    }
+                }
+                else {
+                    print(error?.localizedDescription ?? "Error unable to be described")
+                }
+            }
+        }
+        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -172,7 +203,7 @@ extension MapViewController : MKMapViewDelegate {
         setButton.setTitle("Set", for: UIControlState.normal)
         setButton.setTitleColor(UIColor.blue, for: UIControlState.normal)
         setButton.setTitleColor(UIColor.cyan, for: UIControlState.highlighted)
-        button.addTarget(self, action: #selector(MapViewController.setRoute), for: .touchUpInside)
+        setButton.addTarget(self, action: #selector(MapViewController.setRoute), for: .touchUpInside)
         pinView?.rightCalloutAccessoryView = setButton
         
         
