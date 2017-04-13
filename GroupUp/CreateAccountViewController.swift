@@ -8,12 +8,12 @@
 
 import UIKit
 import CoreData
+import Firebase
 
 class CreateAccountViewController: UIViewController, UITextFieldDelegate {
 
+    @IBOutlet weak var emailField: CreateAccountTextField!
     @IBOutlet weak var usernameField: CreateAccountTextField!
-    @IBOutlet weak var firstField: CreateAccountTextField!
-    @IBOutlet weak var lastField: CreateAccountTextField!
     @IBOutlet weak var passwordField: CreateAccountTextField!
     @IBOutlet weak var confirmField: CreateAccountTextField!
     
@@ -25,16 +25,14 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         usernameField.delegate = self
-        firstField.delegate = self
-        lastField.delegate = self
+        emailField.delegate = self
         passwordField.delegate = self
         confirmField.delegate = self
         
         createButton.layer.cornerRadius = 5
         
         usernameField.attributedPlaceholder = NSAttributedString(string: usernameField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.lightGray])
-        firstField.attributedPlaceholder = NSAttributedString(string: firstField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.lightGray])
-        lastField.attributedPlaceholder = NSAttributedString(string: lastField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.lightGray])
+        emailField.attributedPlaceholder = NSAttributedString(string: emailField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.lightGray])
         passwordField.attributedPlaceholder = NSAttributedString(string: passwordField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.lightGray])
         confirmField.attributedPlaceholder = NSAttributedString(string: confirmField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.lightGray])
     }
@@ -45,13 +43,10 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == self.usernameField {
-            self.firstField.becomeFirstResponder()
+        if textField == self.emailField {
+            self.usernameField.becomeFirstResponder()
         }
-        else if textField == self.firstField {
-            self.lastField.becomeFirstResponder()
-        }
-        else if textField == self.lastField {
+        else if textField == self.usernameField {
             self.passwordField.becomeFirstResponder()
         }
         else if textField == self.passwordField {
@@ -72,77 +67,41 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
         self.navigationController?.setNavigationBarHidden(false, animated:true)
     }
     
-    @IBAction func saveAccountCore(_ sender: Any) {
-        if firstField.text! == "" || lastField.text! == "" || passwordField.text! == "" || confirmField.text! == "" || usernameField.text! == "" {
-            let alert = UIAlertController(title:"Invalid input", message:"You must enter a value for all fields.", preferredStyle:UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
-            self.present(alert, animated:true)
+    @IBAction func createAccount(_ sender: Any) {
+        if usernameField.text! == "" || emailField.text! == "" || passwordField.text! == "" || confirmField.text! == "" || usernameField.text! == "" {
+            popup(title: "Invalid Input", message: "You must enter a value for all fields.")
         }
         else if passwordField.text!.characters.count < 8 {
-            let alert = UIAlertController(title:"Weak Password", message:"Password must be at least 8 characters long.", preferredStyle:UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
-            self.present(alert, animated:true)
+            popup(title: "Weak Password", message: "Password must be at least 8 characters long.")
         }
         else if passwordField.text! != confirmField.text! {
-            let alert = UIAlertController(title:"Invalid input", message:"Passwords do not match.", preferredStyle:UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
-            self.present(alert, animated:true)
-        }
-        else if checkDuplicateUsername() != 0 {
-            let alert = UIAlertController(title:"Invalid input", message:"Username already exists.", preferredStyle:UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
-            self.present(alert, animated:true)
-        }
-        else {
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.persistentContainer.viewContext
-            let entity =  NSEntityDescription.entity(forEntityName: "Account", in: managedContext)
-            let candidate = NSManagedObject(entity:entity!, insertInto:managedContext)
-            
-            candidate.setValue(usernameField.text!, forKey:"username")
-            candidate.setValue(firstField.text!, forKey:"firstName")
-            candidate.setValue(lastField.text!, forKey:"lastName")
-            candidate.setValue(passwordField.text!, forKey:"password")
-            
-            do {
-                try managedContext.save()
-            }
-            catch {
-                let nserror = error as NSError
-                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-                abort()
-            }
-            
-            _ = navigationController?.popViewController(animated:true)
-        }
-    }
-    
-    func checkDuplicateUsername() -> Int {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Account")
-        fetchRequest.predicate = NSPredicate(format: "username == %@", usernameField.text!)
-        var fetchedResults:[NSManagedObject]? = nil
-        
-        do {
-            print("trying")
-            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
-        }
-        catch {
-            let nserror = error as NSError
-            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-            abort()
-        }
-        
-        if let results = fetchedResults {
-            accounts = results
+            popup(title: "Invalid Input", message: "Passwords do not match.")
         } else {
-            print("Could not fetch")
+            FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passwordField.text!) { (user, error) in
+                if let error = error {
+                    self.popup(title: "Error", message: error.localizedDescription)
+                    return
+                }
+                let changeRequest = user?.profileChangeRequest()
+                changeRequest?.displayName = self.usernameField.text!
+                changeRequest?.commitChanges() {(error) in
+                    if let error = error {
+                        self.popup(title: "Error", message: error.localizedDescription)
+                        return
+                    }
+                }
+                print("Account Created")
+                _ = self.navigationController?.popViewController(animated:true)
+            }
         }
-        
-        return accounts.count
     }
     
+    func popup(title:String, message:String) {
+        let alert = UIAlertController(title:"\(title)", message:"\(message)", preferredStyle:UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
+        self.present(alert, animated:true)
+    }
+
     /*
     // MARK: - Navigation
 

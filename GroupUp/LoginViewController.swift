@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Firebase
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
 
@@ -63,41 +64,28 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.view.endEditing(true)
     }
     
-    @IBAction func performLogin(_ sender: Any) {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Account")
-        fetchRequest.predicate = NSPredicate(format: "username == %@", usernameField.text!)
-        var fetchedResults:[NSManagedObject]? = nil
-        
-        do {
-            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
-        }
-        catch {
-            let nserror = error as NSError
-            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-            abort()
-        }
-        
-        if let results = fetchedResults {
-            accounts = results
-        } else {
-            print("Could Not Fetch")
-        }
-        
-        if accounts.count == 0 {
-            let alert = UIAlertController(title:"Invalid Username", message:"Username does not exist.", preferredStyle:UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
-            self.present(alert, animated:true)
-        } else if accounts[0].value(forKey: "password") as! String == passwordField.text! {
-            performSegue(withIdentifier: "loginSegue", sender: nil)
-        } else {
-            let alert = UIAlertController(title:"Invalid Password", message:"Please enter the correct password.", preferredStyle:UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
-            self.present(alert, animated:true)
+    @IBAction func loginFirebase(_ sender: Any) {
+        if let email = self.usernameField.text, let password = self.passwordField.text {
+                // [START headless_email_auth]
+                FIRAuth.auth()?.signIn(withEmail: email, password: password) { (user, error) in
+                    // [START_EXCLUDE]
+                    if let error = error {
+                        self.popup(title: "Error", message: error.localizedDescription)
+                        return
+                    }
+                    print("Login successful")
+                    self.performSegue(withIdentifier: "loginSegue", sender: nil)
+                    // [END_EXCLUDE]
+                }
+                // [END headless_email_auth]
         }
     }
     
+    func popup(title:String, message:String) {
+        let alert = UIAlertController(title:"\(title)", message:"\(message)", preferredStyle:UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
+        self.present(alert, animated:true)
+    }
     //    override func viewWillDisappear(_ animated: Bool) {
     //        self.navigationController?.setNavigationBarHidden(false, animated:true)
     //    }

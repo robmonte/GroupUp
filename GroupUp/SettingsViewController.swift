@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class SettingsViewController: UIViewController {
 
@@ -60,6 +61,17 @@ class SettingsViewController: UIViewController {
         }        
     }
     
+    @IBAction func deleteAccount(_ sender: Any) {
+        let user = FIRAuth.auth()?.currentUser
+        
+        user?.delete { error in
+            if let error = error {
+                print(error)
+            } else {
+                self.performSegue(withIdentifier: "loginSegue", sender: nil)
+            }
+        }
+    }
     /*
     // MARK: - Navigation
 
