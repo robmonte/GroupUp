@@ -14,6 +14,7 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var groupNameLabel: UILabel!
     @IBOutlet weak var membersTable: UITableView!
     @IBOutlet weak var etaLabel: UILabel!
+    @IBOutlet weak var addressLabel: UILabel!
     
     private var membersList = [String]()
     private var groups = [NSManagedObject]()
@@ -27,8 +28,11 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
         membersTable.delegate = self
         membersTable.dataSource = self
         groupNameLabel.text = groupName
+        
         NotificationCenter.default.addObserver(self, selector: #selector(getETA(notification:)), name: NSNotification.Name(rawValue: "setRoute"), object: nil)
         setupMembersArray()
+        addressLabel.text? = locAddress
+        formatETA()
     }
     
     override func didReceiveMemoryWarning() {
@@ -80,13 +84,54 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
             print("Could not fetch")
         }
         
+        if let eta = groups[0].value(forKey: "eta") as? Double {
+            self.locETA = eta
+        }
+        if let address = groups[0].value(forKey: "address") as? String {
+            self.locAddress = address
+        }
         let names:String? = groups[0].value(forKey: "groupMembers") as? String
         membersList = names!.components(separatedBy: ",")
     }
     
     func getETA(notification: Notification) {
-        if let dict: Dictionary<String,Double> = notification.userInfo as? Dictionary<String,Double> {
-            self.locETA = dict["ETA"] ?? 0.0
+        if let dict: Dictionary<String,Any> = notification.userInfo as? Dictionary<String,Any> {
+            self.locETA = dict["ETA"] as! Double
+            self.locAddress = dict["Address"] as! String
+            self.addressLabel.text? = self.locAddress
+            
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            let managedContext = appDelegate.persistentContainer.viewContext
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Group")
+            fetchRequest.predicate = NSPredicate(format: "groupName == %@", groupName)
+            var fetchedResults:[NSManagedObject]? = nil
+            
+            do {
+                try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            }
+            catch {
+                let nserror = error as NSError
+                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+                abort()
+            }
+            
+            if let results = fetchedResults {
+                groups = results
+            } else {
+                print("Could not fetch")
+            }
+            groups[0].setValue(self.locAddress, forKey: "address")
+            groups[0].setValue(self.locETA, forKey: "eta")
+        
+            do {
+                try managedContext.save()
+            }
+            catch {
+                let nserror = error as NSError
+                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+                abort()
+            }
+            
             
             let hours = floor(self.locETA/3600)
             let minutes = floor((self.locETA - hours*3600)/60)
@@ -101,6 +146,22 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
             else {
                 self.etaLabel.text? = "\(Int(minutes)) min \(Int(seconds)) sec"
             }
+        }
+    }
+    
+    func formatETA() {
+        let hours = floor(self.locETA/3600)
+        let minutes = floor((self.locETA - hours*3600)/60)
+        let seconds = self.locETA - hours*3600 - minutes*60
+        
+        if Int(hours) > 0 {
+            self.etaLabel.text? = "\(Int(hours)) hr \(Int(minutes)) min"
+        }
+        else if Int(minutes) > 4 {
+            self.etaLabel.text? = "\(Int(minutes)) min"
+        }
+        else {
+            self.etaLabel.text? = "\(Int(minutes)) min \(Int(seconds)) sec"
         }
     }
     

@@ -110,7 +110,15 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
                     if response != nil {
                         let route = response?.routes[0]
                         self.mapView.add((route?.polyline)!)
-                        let etaInfoDict: [String: Double] = ["ETA": (route?.expectedTravelTime)!]
+                        
+                        let addressDict = selectedPin.addressDictionary
+                        let street = addressDict?["Street"] ?? ""
+                        let city = addressDict?["City"] ?? ""
+                        let state = addressDict?["State"] ?? ""
+                        let zip = addressDict?["ZIP"] ?? ""
+                        let address = "\(street) \(city) \(state) \(zip)"
+                        
+                        let etaInfoDict: [String: Any] = ["ETA": (route?.expectedTravelTime)! , "Address": address]
                         
                         
                         NotificationCenter.default.post(name: Notification.Name(rawValue: "setRoute"), object: nil, userInfo: etaInfoDict)
