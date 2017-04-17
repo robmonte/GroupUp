@@ -12,12 +12,13 @@ import Firebase
 class SettingsViewController: UIViewController {
 
     @IBOutlet weak var rememberUsernameToggle: UISwitch!
-    public var username:String = ""
+    
+    public var email:String = ""
+    
+    let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let defaults = UserDefaults.standard
         
         rememberUsernameToggle.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
         let check:Bool = defaults.object(forKey: "rememberState") as? Bool ?? false
@@ -48,15 +49,13 @@ class SettingsViewController: UIViewController {
     }
     
     func switchChanged(rememberSwitch: UISwitch) {
-        let defaults = UserDefaults.standard
-        
         if rememberSwitch.isOn {
-            defaults.set(username, forKey: "rememberUsername")
+            defaults.set(email, forKey: "rememberEmail")
             defaults.set(true, forKey: "rememberState")
         }
         else {
             let blank:String = ""
-            defaults.set(blank, forKey: "rememberUsername")
+            defaults.set(blank, forKey: "rememberEmail")
             defaults.set(false, forKey: "rememberState")
         }        
     }

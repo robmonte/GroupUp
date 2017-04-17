@@ -207,7 +207,7 @@
 				TargetAttributes = {
 					CCE2FACD1E74A4E900440D21 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 7WC6VRVKXY;
+						DevelopmentTeam = 6NH395H54B;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Maps.iOS = {
@@ -444,10 +444,11 @@
 			baseConfigurationReference = F40685D45C8A2C90AEFA3EB9 /* Pods-GroupUp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 7WC6VRVKXY;
+				DEVELOPMENT_TEAM = 6NH395H54B;
 				INFOPLIST_FILE = GroupUp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cs378ios.GroupUp;
+				PRODUCT_BUNDLE_IDENTIFIER = "cs378-ios.GroupUp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -458,10 +459,11 @@
 			baseConfigurationReference = FD027F595FB5850839F53899 /* Pods-GroupUp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 7WC6VRVKXY;
+				DEVELOPMENT_TEAM = 6NH395H54B;
 				INFOPLIST_FILE = GroupUp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cs378ios.GroupUp;
+				PRODUCT_BUNDLE_IDENTIFIER = "cs378-ios.GroupUp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};

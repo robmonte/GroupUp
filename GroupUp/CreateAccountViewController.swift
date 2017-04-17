@@ -7,34 +7,44 @@
 //
 
 import UIKit
-import CoreData
 import Firebase
 
 class CreateAccountViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var emailField: CreateAccountTextField!
+    @IBOutlet weak var confirmEmailField: CreateAccountTextField!
     @IBOutlet weak var usernameField: CreateAccountTextField!
+    @IBOutlet weak var firstField: CreateAccountTextField!
+    @IBOutlet weak var lastField: CreateAccountTextField!
     @IBOutlet weak var passwordField: CreateAccountTextField!
-    @IBOutlet weak var confirmField: CreateAccountTextField!
+    @IBOutlet weak var confirmPasswordField: CreateAccountTextField!
     
     @IBOutlet weak var createButton: UIButton!
-    
-    private var accounts = [NSManagedObject]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        usernameField.delegate = self
         emailField.delegate = self
+        confirmEmailField.delegate = self
+        usernameField.delegate = self
+        firstField.delegate = self
+        lastField.delegate = self
         passwordField.delegate = self
-        confirmField.delegate = self
+        confirmPasswordField.delegate = self
         
         createButton.layer.cornerRadius = 5
         
-        usernameField.attributedPlaceholder = NSAttributedString(string: usernameField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.lightGray])
-        emailField.attributedPlaceholder = NSAttributedString(string: emailField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.lightGray])
-        passwordField.attributedPlaceholder = NSAttributedString(string: passwordField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.lightGray])
-        confirmField.attributedPlaceholder = NSAttributedString(string: confirmField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.lightGray])
+        setAttributedStyle(text: emailField)
+        setAttributedStyle(text: confirmEmailField)
+        setAttributedStyle(text: usernameField)
+        setAttributedStyle(text: firstField)
+        setAttributedStyle(text: lastField)
+        setAttributedStyle(text: passwordField)
+        setAttributedStyle(text: confirmPasswordField)
+    }
+    
+    func setAttributedStyle(text: CreateAccountTextField) {
+        text.attributedPlaceholder = NSAttributedString(string: text.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.lightGray])
     }
     
     override func didReceiveMemoryWarning() {
@@ -44,16 +54,26 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == self.emailField {
+            self.confirmEmailField.becomeFirstResponder()
+        }
+        else if textField == self.confirmEmailField {
             self.usernameField.becomeFirstResponder()
         }
         else if textField == self.usernameField {
+            self.firstField.becomeFirstResponder()
+        }
+        else if textField == self.firstField {
+            self.lastField.becomeFirstResponder()
+        }
+        else if textField == self.lastField {
             self.passwordField.becomeFirstResponder()
         }
         else if textField == self.passwordField {
-            self.confirmField.becomeFirstResponder()
+            self.confirmPasswordField.becomeFirstResponder()
         }
-        else if textField == self.confirmField {
+        else if textField == self.confirmPasswordField {
             textField.resignFirstResponder()
+            createAccount(textField)
         }
         
         return true
@@ -68,13 +88,16 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func createAccount(_ sender: Any) {
-        if usernameField.text! == "" || emailField.text! == "" || passwordField.text! == "" || confirmField.text! == "" || usernameField.text! == "" {
+        if emailField.text! == "" || confirmEmailField.text! == "" || usernameField.text! == "" || firstField.text! == "" || lastField.text! == "" || passwordField.text! == "" || confirmPasswordField.text! == "" || usernameField.text! == "" {
             popup(title: "Invalid Input", message: "You must enter a value for all fields.")
         }
         else if passwordField.text!.characters.count < 8 {
             popup(title: "Weak Password", message: "Password must be at least 8 characters long.")
         }
-        else if passwordField.text! != confirmField.text! {
+        else if emailField.text! != confirmEmailField.text! {
+            popup(title: "Invalid Input", message: "Emails do not match!")
+        }
+        else if passwordField.text! != confirmPasswordField.text! {
             popup(title: "Invalid Input", message: "Passwords do not match.")
         } else {
             FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passwordField.text!) { (user, error) in
@@ -90,7 +113,14 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
                         return
                     }
                 }
-                print("Account Created")
+                
+                let rootRef = FIRDatabase.database().reference()
+                let accountsRef = rootRef.child("Accounts")
+                let newRef = accountsRef.child(self.usernameField.text!)
+                let user:[String: String] = ["Username": self.usernameField.text!, "Email": self.emailField.text!, "First": self.firstField.text!, "Last": self.lastField.text!]
+                
+                newRef.setValue(user)
+
                 _ = self.navigationController?.popViewController(animated:true)
             }
         }

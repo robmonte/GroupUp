@@ -43,20 +43,24 @@ class LocationTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: "locationCell")!
         let selectedItem = matchingItems[indexPath.row].placemark
-        cell.textLabel?.text = selectedItem.name
+        
         let addressDict = selectedItem.addressDictionary
         let address = addressDict?["Street"] ?? ""
         let city = addressDict?["City"] ?? ""
         let state = addressDict?["State"] ?? ""
         let zip = addressDict?["ZIP"] ?? ""
+        
+        cell.textLabel?.text = selectedItem.name
         cell.detailTextLabel?.text = "\(address) \(city) \(state) \(zip)"
+        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedItem = matchingItems[indexPath.row].placemark
+        
         handleMapSearchDelegate?.dropPinZoomIn(placemark: selectedItem)
         dismiss(animated: true, completion: nil)
     }

@@ -8,12 +8,14 @@
 
 import UIKit
 import CoreData
+import Firebase
 
 class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var groupNameField: UITextField!
     @IBOutlet weak var membersTable: UITableView!
     
+    public var username:String = ""
     private var addMembers:String = ""
     private var accounts = [NSManagedObject]()
     private var groups = [NSManagedObject]()
@@ -25,6 +27,8 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
         groupNameField.delegate = self
         membersTable.delegate = self
         membersTable.dataSource = self
+        addMembers = "\(username)"
+        membersList.append(addMembers)
         
         // Do any additional setup after loading the view.
     }
@@ -44,24 +48,17 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //return membersList.count
-        return 3
+        return membersList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "membersID")
         
-        //membersList = addMembers.components(separatedBy: ",")
-        //cell.textLabel?.text = membersList[indexPath.row]
-        
         if indexPath.row == 0 {
-            cell.textLabel?.text = "Sam Sample"
-        }
-        else if indexPath.row == 1 {
-            cell.textLabel?.text = "John Doe"
+            cell.textLabel?.text = "Leader: " + membersList[indexPath.row]
         }
         else {
-            cell.textLabel?.text = "Jane Doe"
+            cell.textLabel?.text = membersList[indexPath.row]
         }
         
         return cell
@@ -78,7 +75,7 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
     
     @IBAction func confirmCreationButton(_ sender: Any) {
         if groupNameField.text == "" {
-            let alert = UIAlertController(title:"Empty group name", message:"Please enter a group name.", preferredStyle:UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title:"Invalid input", message:"Please enter a group name.", preferredStyle:UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
             self.present(alert, animated:true)
         }
@@ -88,6 +85,13 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
             self.present(alert, animated:true)
         }
         else {
+//            let rootRef = FIRDatabase.database().reference()
+//            let groupsRef = rootRef.child("Groups")
+//            let newRef = groupsRef.child(self.groupNameField.text!)
+//            let group:[String: String] = ["Members": addMembers]
+//            
+//            newRef.setValue(group)
+            
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             let managedContext = appDelegate.persistentContainer.viewContext
             let entity =  NSEntityDescription.entity(forEntityName: "Group", in: managedContext)
@@ -95,6 +99,7 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
             
             group.setValue(groupNameField.text!, forKey:"groupName")
             group.setValue(addMembers, forKey:"groupMembers")
+            group.setValue(username, forKey:"groupLeader")
             do {
                 try managedContext.save()
             }
@@ -103,7 +108,7 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
                 NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
                 abort()
             }
-
+            
             _ = navigationController?.popViewController(animated:true)
         }
     }
@@ -120,40 +125,85 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
             let addUserField = alert.textFields?[0]
             let user:String = (addUserField?.text)!
             
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.persistentContainer.viewContext
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Account")
-            fetchRequest.predicate = NSPredicate(format: "username == %@", user)
-            var fetchedResults:[NSManagedObject]? = nil
             
-            do {
-                try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            }
-            catch {
-                let nserror = error as NSError
-                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-                abort()
-            }
             
-            if let results = fetchedResults {
-                self.accounts = results
-            } else {
-                print("Could Not Fetch")
-            }
+//            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//            let managedContext = appDelegate.persistentContainer.viewContext
+//            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Account")
+//            fetchRequest.predicate = NSPredicate(format: "username == %@", user)
+//            var fetchedResults:[NSManagedObject]? = nil
+//            
+//            do {
+//                try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
+//            }
+//            catch {
+//                let nserror = error as NSError
+//                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+//                abort()
+//            }
+//            
+//            if let results = fetchedResults {
+//                self.accounts = results
+//            } else {
+//                print("Could Not Fetch")
+//            }
             
-            if self.accounts.count == 0 {
-                let noSuchUserAlert = UIAlertController(title:"Invalid Username", message:"Username does not exist.", preferredStyle:UIAlertControllerStyle.alert)
-                noSuchUserAlert.addAction(UIKit.UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
-                self.present(noSuchUserAlert, animated:true)
-            }
-            else {
-                if self.addMembers == "" {
-                    self.addMembers += "\(user)"
+            
+            var exists = false
+            let rootRef = FIRDatabase.database().reference()
+            rootRef.observe(.value, with: { snapshot in
+                //print(snapshot.value)
+                print ("checking if \(user) exists!!!")
+                exists = snapshot.hasChild("Accounts/\(user)")
+                print(exists)
+                //print(snapshot.childSnapshot(forPath: "Accounts"))
+                
+                
+                if !exists {
+                    let noSuchUserAlert = UIAlertController(title:"Invalid input", message:"Username does not exist.", preferredStyle:UIAlertControllerStyle.alert)
+                    noSuchUserAlert.addAction(UIKit.UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
+                    self.present(noSuchUserAlert, animated:true)
                 }
                 else {
-                    self.addMembers += ",\(user)"
+                    if self.membersList.contains(user) {
+                        let alreadyInGroupAlert = UIAlertController(title:"Invalid input", message:"Username is already a member of the group.", preferredStyle:UIAlertControllerStyle.alert)
+                        alreadyInGroupAlert.addAction(UIKit.UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
+                        self.present(alreadyInGroupAlert, animated:true)
+                    }
+                    else {
+                        self.addMembers += ",\(user)"
+                        self.membersList.append("\(user)")
+                        DispatchQueue.main.async {
+                            self.membersTable.reloadData()
+                        }
+                        
+                    }
                 }
-            }
+            })
+            
+            print("exists is \(exists)")
+            
+//            if self.accounts.count == 0 {
+//            if !exists {
+//                let noSuchUserAlert = UIAlertController(title:"Invalid input", message:"Username does not exist.", preferredStyle:UIAlertControllerStyle.alert)
+//                noSuchUserAlert.addAction(UIKit.UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
+//                self.present(noSuchUserAlert, animated:true)
+//            }
+//            else {
+//                if self.membersList.contains(user) {
+//                    let alreadyInGroupAlert = UIAlertController(title:"Invalid input", message:"Username is already a member of the group.", preferredStyle:UIAlertControllerStyle.alert)
+//                    alreadyInGroupAlert.addAction(UIKit.UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
+//                    self.present(alreadyInGroupAlert, animated:true)
+//                }
+//                else {
+//                    self.addMembers += ",\(user)"
+//                    self.membersList.append("\(user)")
+//                    DispatchQueue.main.async {
+//                        self.membersTable.reloadData()
+//                    }
+//                    
+//                }
+//            }
         })
         alert.addAction(UIAlertAction(title:"Cancel", style:UIAlertActionStyle.cancel))
         self.present(alert, animated:true)

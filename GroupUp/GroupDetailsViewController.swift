@@ -48,7 +48,12 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "membersID")
         
-        cell.textLabel?.text = membersList[indexPath.row]
+        if indexPath.row == 0 {
+            cell.textLabel?.text = "Leader: " + membersList[indexPath.row]
+        }
+        else {
+            cell.textLabel?.text = membersList[indexPath.row]
+        }
         
         return cell
     }
@@ -82,14 +87,22 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
     func getETA(notification: Notification) {
         if let dict: Dictionary<String,Double> = notification.userInfo as? Dictionary<String,Double> {
             self.locETA = dict["ETA"] ?? 0.0
+            
             let hours = floor(self.locETA/3600)
             let minutes = floor((self.locETA - hours*3600)/60)
             let seconds = self.locETA - hours*3600 - minutes*60
-            self.etaLabel.text? = "\(Int(hours)):\(Int(minutes)):\(Int(seconds))"
+            
+            if Int(hours) > 0 {
+                self.etaLabel.text? = "\(Int(hours)) hr \(Int(minutes)) min"
+            }
+            else if Int(minutes) > 4 {
+                self.etaLabel.text? = "\(Int(minutes)) min"
+            }
+            else {
+                self.etaLabel.text? = "\(Int(minutes)) min \(Int(seconds)) sec"
+            }
         }
-        
     }
-    
     
 
     /*

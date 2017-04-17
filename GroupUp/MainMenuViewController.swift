@@ -11,8 +11,11 @@ import Firebase
 
 class MainMenuViewController: UIViewController {
     
-    public var username:String = ""
     @IBOutlet weak var usernameLabel: UILabel!
+    
+    public var email:String = ""
+    public var username:String = ""
+    
     var handle: FIRAuthStateDidChangeListenerHandle?
 
     override func viewDidLoad() {
@@ -38,8 +41,10 @@ class MainMenuViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated:true)
+        
         handle = FIRAuth.auth()?.addStateDidChangeListener() { (auth, user) in
-            self.usernameLabel.text! = (user?.displayName!)!
+            self.usernameLabel.text! = "Welcome back \((user?.displayName!)!)"
+            self.username = (user?.displayName!)!
         }
     }
     
@@ -54,6 +59,9 @@ class MainMenuViewController: UIViewController {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destinationVC = segue.destination as? SettingsViewController {
+            destinationVC.email = self.email
+        }
+        else if let destinationVC = segue.destination as? CreateGroupViewController {
             destinationVC.username = self.username
         }
     }

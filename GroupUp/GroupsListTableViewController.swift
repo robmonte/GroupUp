@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Firebase
 
 class GroupsListTableViewController: UITableViewController {
     
@@ -56,6 +57,14 @@ class GroupsListTableViewController: UITableViewController {
     }
     
     func loadGroups() {
+        
+//        let rootRef = FIRDatabase.database().reference()
+//        let groupsRef = rootRef.child("Groups")
+//        
+//        print(rootRef.value(forKey: "Groups"))
+        
+//        print(groupsRef.value(forKey: "Groups"))
+        
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Group")

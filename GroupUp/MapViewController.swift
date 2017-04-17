@@ -25,6 +25,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        mapView.delegate = self
+        
         if(CLLocationManager.locationServicesEnabled()) {
             locationManager = CLLocationManager()
             locationManager.delegate = self
@@ -49,8 +51,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
         locationSearchTable.mapView = mapView
         
         locationSearchTable.handleMapSearchDelegate = self
-        
-        mapView.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -75,11 +75,13 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
         if let selectedPin = selectedPin {
             let mapItem = MKMapItem(placemark: selectedPin)
             let dirRequest = MKDirectionsRequest()
+            
             dirRequest.destination = mapItem
             let src = MKMapItem.forCurrentLocation()
             dirRequest.source = src
             let directions = MKDirections(request: dirRequest)
-            directions.calculate() {response, error in
+            
+            directions.calculate() { response, error in
                 if error == nil {
                     if response != nil {
                         let route = response?.routes[0]
@@ -134,6 +136,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        
         return true
     }
     

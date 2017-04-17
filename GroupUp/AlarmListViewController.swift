@@ -53,7 +53,7 @@ class AlarmListViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated:true)
+        self.navigationController?.setNavigationBarHidden(false, animated:true)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

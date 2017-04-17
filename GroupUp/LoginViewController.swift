@@ -12,7 +12,7 @@ import Firebase
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
 
-    @IBOutlet weak var usernameField: LoginTextField!
+    @IBOutlet weak var emailField: LoginTextField!
     @IBOutlet weak var passwordField: LoginTextField!
     
     @IBOutlet weak var loginButton: UIButton!
@@ -20,12 +20,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     private var accounts = [NSManagedObject]()
     
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let defaults = UserDefaults.standard
         
-        usernameField.delegate = self
+        emailField.delegate = self
         passwordField.delegate = self
         
         loginButton.layer.cornerRadius = 5
@@ -35,8 +37,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         createAccountButton.titleLabel?.textAlignment = NSTextAlignment.center
         createAccountButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         
-        usernameField.text = defaults.object(forKey: "rememberUsername") as! String?
-        usernameField.attributedPlaceholder = NSAttributedString(string: usernameField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.gray, NSFontAttributeName: UIFont.systemFont(ofSize: 20)])
+        emailField.text = defaults.object(forKey: "rememberEmail") as! String?
+        emailField.attributedPlaceholder = NSAttributedString(string: emailField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.gray, NSFontAttributeName: UIFont.systemFont(ofSize: 20)])
+        
         passwordField.attributedPlaceholder = NSAttributedString(string: passwordField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.gray, NSFontAttributeName: UIFont.systemFont(ofSize: 20)])
     }
 
@@ -46,17 +49,21 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == self.usernameField {
+        if textField == self.emailField {
             self.passwordField.becomeFirstResponder()
         }
         else if textField == self.passwordField {
             textField.resignFirstResponder()
+            loginFirebase(textField)
         }
         
         return true
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        emailField.text = defaults.object(forKey: "rememberEmail") as! String?
+        passwordField.text = ""
+        
         self.navigationController?.setNavigationBarHidden(true, animated:true)
     }
     
@@ -65,7 +72,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func loginFirebase(_ sender: Any) {
-        if let email = self.usernameField.text, let password = self.passwordField.text {
+        if let email = self.emailField.text, let password = self.passwordField.text {
                 // [START headless_email_auth]
                 FIRAuth.auth()?.signIn(withEmail: email, password: password) { (user, error) in
                     // [START_EXCLUDE]
@@ -94,7 +101,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destinationVC = segue.destination as? MainMenuViewController {
-            destinationVC.username = usernameField.text!
+            destinationVC.email = emailField.text!
         }
     }
 }
