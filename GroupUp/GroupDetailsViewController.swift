@@ -177,10 +177,34 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
                 abort()
             }
             
+            let destHours:Int = groups[0].value(forKey: "timeHours") as! Int
+            let destMinutes:Int = groups[0].value(forKey: "timeMinutes") as! Int
+            
             
             let hours = floor(self.locETA/3600)
             let minutes = floor((self.locETA - hours*3600)/60)
             let seconds = self.locETA - hours*3600 - minutes*60
+            
+            let notification = UILocalNotification()
+            notification.alertBody = "It's Time to Leave!"
+            let curDate = NSDate()
+            let unitFlags: Set<Calendar.Component> = [.hour, .day, .month, .year]
+            var components = NSCalendar.current.dateComponents(unitFlags, from: curDate as Date)
+            var dateHour = destHours - Int(hours)
+            var dateMin = destMinutes - Int(minutes)
+            if(dateMin < 0) {
+                dateHour -= 1
+                dateMin = 60 - dateMin
+            }
+            if(dateHour < 0) {
+                dateHour = 23
+            }
+            components.hour = dateHour
+            components.minute = dateMin
+            let dateTime = NSCalendar.current.date(from: components)
+            notification.fireDate = dateTime
+            notification.soundName = UILocalNotificationDefaultSoundName
+            UIApplication.shared.scheduleLocalNotification(notification)
             
 //            if Int(hours) > 0 {
 //                self.etaLabel.text? = "\(Int(hours)) hr \(Int(minutes)) min"

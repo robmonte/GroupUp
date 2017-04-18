@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import Firebase
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,8 +19,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FIRApp.configure()
+        let settings = UIUserNotificationSettings(types: [.alert], categories: nil)
+        UIApplication.shared.registerUserNotificationSettings(settings)
         return true
     }
+    
+   // func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
+   //     let alertController = UIAlertController(title: "Alarm", message: "Time to Leave!", preferredStyle: UIAlertControllerStyle.alert)
+        
+   //     let OK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
+   //     }
+        
+   //     alertController.addAction(OK)
+        
+   //     self.window.present(alertController, animated: true)
+   // }
+    
+    //func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+   //     completionHandler(UNNotificationPresentationOptions.alert)
+   // }
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
