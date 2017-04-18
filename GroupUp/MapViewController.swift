@@ -205,11 +205,10 @@ extension MapViewController : MKMapViewDelegate {
         pinView?.canShowCallout = true
         
         let smallSquare = CGSize(width: 30, height: 30)
-        let button = UIButton(frame: CGRect(origin: CGPoint(x: 0,y: 0), size: smallSquare))
-        
-        button.backgroundColor = UIColor.blue
-        button.addTarget(self, action: #selector(MapViewController.getDirections), for: .touchUpInside)
-        pinView?.leftCalloutAccessoryView = button
+        //let button = UIButton(frame: CGRect(origin: CGPoint(x: 0,y: 0), size: smallSquare))
+        //button.backgroundColor = UIColor.blue
+        //button.addTarget(self, action: #selector(MapViewController.getDirections), for: .touchUpInside)
+        //pinView?.leftCalloutAccessoryView = button
         
         let setButton = UIButton(frame: CGRect(origin: CGPoint(x: 0,y: 0), size: smallSquare))
         setButton.setTitle("Set", for: UIControlState.normal)

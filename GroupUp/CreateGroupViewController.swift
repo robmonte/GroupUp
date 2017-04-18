@@ -17,6 +17,7 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
     @IBOutlet weak var destTimePicker: UIDatePicker!
     
     public var username:String = ""
+    public var confirmed:Bool = false
     private var addMembers:String = ""
     private var accounts = [NSManagedObject]()
     private var groups = [NSManagedObject]()
@@ -89,17 +90,15 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
             let rootRef = FIRDatabase.database().reference()
             let groupsRef = rootRef.child("Groups")
             let newRef = groupsRef.child(self.groupNameField.text!)
-            //let groupData:[String: [String]] = ["Members": membersList]
+//            let groupData:[String: [String]] = ["Members": membersList]
             
             newRef.setValue(membersList)
-            print(addMembers)
             print(membersList)
             
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             let managedContext = appDelegate.persistentContainer.viewContext
             let entity =  NSEntityDescription.entity(forEntityName: "Group", in: managedContext)
             let group = NSManagedObject(entity:entity!, insertInto:managedContext)
-            
             
             let date = destTimePicker.date
             let calendar = NSCalendar.current
@@ -119,6 +118,7 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
                 abort()
             }
             
+            confirmed = true
             _ = navigationController?.popViewController(animated:true)
         }
     }
@@ -134,31 +134,7 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
             
             let addUserField = alert.textFields?[0]
             let user:String = (addUserField?.text)!
-            
-            
-            
-//            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-//            let managedContext = appDelegate.persistentContainer.viewContext
-//            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Account")
-//            fetchRequest.predicate = NSPredicate(format: "username == %@", user)
-//            var fetchedResults:[NSManagedObject]? = nil
-//            
-//            do {
-//                try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
-//            }
-//            catch {
-//                let nserror = error as NSError
-//                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-//                abort()
-//            }
-//            
-//            if let results = fetchedResults {
-//                self.accounts = results
-//            } else {
-//                print("Could Not Fetch")
-//            }
-            
-            
+ 
             var exists = false
             let rootRef = FIRDatabase.database().reference()
             rootRef.observe(.value, with: { snapshot in
@@ -168,14 +144,13 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
                 print(exists)
                 //print(snapshot.childSnapshot(forPath: "Accounts"))
                 
-                
                 if !exists {
                     let noSuchUserAlert = UIAlertController(title:"Invalid input", message:"Username does not exist.", preferredStyle:UIAlertControllerStyle.alert)
                     noSuchUserAlert.addAction(UIKit.UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
                     self.present(noSuchUserAlert, animated:true)
                 }
                 else {
-                    if self.membersList.contains(user) {
+                    if self.membersList.contains(user) && !self.confirmed {
                         let alreadyInGroupAlert = UIAlertController(title:"Invalid input", message:"Username is already a member of the group.", preferredStyle:UIAlertControllerStyle.alert)
                         alreadyInGroupAlert.addAction(UIKit.UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
                         self.present(alreadyInGroupAlert, animated:true)
@@ -186,34 +161,9 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
                         DispatchQueue.main.async {
                             self.membersTable.reloadData()
                         }
-                        
                     }
                 }
             })
-            
-            print("exists is \(exists)")
-            
-//            if self.accounts.count == 0 {
-//            if !exists {
-//                let noSuchUserAlert = UIAlertController(title:"Invalid input", message:"Username does not exist.", preferredStyle:UIAlertControllerStyle.alert)
-//                noSuchUserAlert.addAction(UIKit.UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
-//                self.present(noSuchUserAlert, animated:true)
-//            }
-//            else {
-//                if self.membersList.contains(user) {
-//                    let alreadyInGroupAlert = UIAlertController(title:"Invalid input", message:"Username is already a member of the group.", preferredStyle:UIAlertControllerStyle.alert)
-//                    alreadyInGroupAlert.addAction(UIKit.UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
-//                    self.present(alreadyInGroupAlert, animated:true)
-//                }
-//                else {
-//                    self.addMembers += ",\(user)"
-//                    self.membersList.append("\(user)")
-//                    DispatchQueue.main.async {
-//                        self.membersTable.reloadData()
-//                    }
-//                    
-//                }
-//            }
         })
         alert.addAction(UIAlertAction(title:"Cancel", style:UIAlertActionStyle.cancel))
         self.present(alert, animated:true)

@@ -99,7 +99,8 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
         }
         else if passwordField.text! != confirmPasswordField.text! {
             popup(title: "Invalid Input", message: "Passwords do not match.")
-        } else {
+        }
+        else {
             FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passwordField.text!) { (user, error) in
                 if let error = error {
                     self.popup(title: "Error", message: error.localizedDescription)

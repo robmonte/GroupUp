@@ -28,14 +28,12 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
         
         membersTable.delegate = self
         membersTable.dataSource = self
+        
         groupNameLabel.text = groupName
+        addressLabel.text? = locAddress
+        setupMembersArray()
         
         NotificationCenter.default.addObserver(self, selector: #selector(getETA(notification:)), name: NSNotification.Name(rawValue: "setRoute"), object: nil)
-        setupMembersArray()
-        addressLabel.text? = locAddress
-        //formatETA()
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,21 +60,35 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
         
         let hours:Int = groups[0].value(forKey: "timeHours") as! Int
         let minutes:Int = groups[0].value(forKey: "timeMinutes") as! Int
+        let minutesLeading = String(format: "%02d", minutes)
+        var hours12 = hours%12
+        if hours12 == 0 {
+            hours12 = 12
+        }
         
-        destTimeLabel.text = "\(hours) hr \(minutes) min"
+        destTimeLabel.text = "\(hours12):\(minutesLeading)"
         
         let eta = groups[0].value(forKey: "eta") as? Double
         let etaHours = floor(eta!/3600)
         let etaMinutes = floor((eta! - etaHours*3600)/60)
-        let etaSeconds = eta! - etaHours*3600 - etaMinutes*60
+//        let etaSeconds = eta! - etaHours*3600 - etaMinutes*60
         
         let calcMin = minutes - Int(etaMinutes)
+        var calcHours = (hours - Int(etaHours)-1) % 12
+        if calcHours == 0 {
+            calcHours = 12
+        }
+        else if calcHours < 0 {
+            calcHours = 12 + calcHours
+        }
         
         if calcMin < 0 {
-            etaLabel.text = "\(hours-Int(etaHours)-1) : \(60+minutes-Int(etaMinutes))"
+            let minLeading = String(format: "%02d", 60+minutes-Int(etaMinutes))
+            etaLabel.text = "\(calcHours):\(minLeading)"
         }
         else {
-            etaLabel.text = "\(hours-Int(etaHours)) : \(minutes-Int(etaMinutes))"
+            let minLeading = String(format: "%02d", minutes-Int(etaMinutes))
+            etaLabel.text = "\(calcHours):\(minLeading)"
         }
     }
     
@@ -183,7 +195,7 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
             
             let hours = floor(self.locETA/3600)
             let minutes = floor((self.locETA - hours*3600)/60)
-            let seconds = self.locETA - hours*3600 - minutes*60
+//            let seconds = self.locETA - hours*3600 - minutes*60
             
             let notification = UILocalNotification()
             notification.alertBody = "It's Time to Leave!"
@@ -205,36 +217,9 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
             notification.fireDate = dateTime
             notification.soundName = UILocalNotificationDefaultSoundName
             UIApplication.shared.scheduleLocalNotification(notification)
-            
-//            if Int(hours) > 0 {
-//                self.etaLabel.text? = "\(Int(hours)) hr \(Int(minutes)) min"
-//            }
-//            else if Int(minutes) > 4 {
-//                self.etaLabel.text? = "\(Int(minutes)) min"
-//            }
-//            else {
-//                self.etaLabel.text? = "\(Int(minutes)) min \(Int(seconds)) sec"
-//            }
         }
     }
     
-    func formatETA() {
-        let hours = floor(self.locETA/3600)
-        let minutes = floor((self.locETA - hours*3600)/60)
-        let seconds = self.locETA - hours*3600 - minutes*60
-        
-        if Int(hours) > 0 {
-            self.etaLabel.text? = "\(Int(hours)) hr \(Int(minutes)) min"
-        }
-        else if Int(minutes) > 4 {
-            self.etaLabel.text? = "\(Int(minutes)) min"
-        }
-        else {
-            self.etaLabel.text? = "\(Int(minutes)) min \(Int(seconds)) sec"
-        }
-    }
-    
-
     /*
     // MARK: - Navigation
 

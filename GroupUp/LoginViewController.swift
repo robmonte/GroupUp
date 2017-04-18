@@ -73,18 +73,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func loginFirebase(_ sender: Any) {
         if let email = self.emailField.text, let password = self.passwordField.text {
-                // [START headless_email_auth]
                 FIRAuth.auth()?.signIn(withEmail: email, password: password) { (user, error) in
-                    // [START_EXCLUDE]
                     if let error = error {
                         self.popup(title: "Error", message: error.localizedDescription)
                         return
                     }
+                    
                     print("Login successful")
                     self.performSegue(withIdentifier: "loginSegue", sender: nil)
-                    // [END_EXCLUDE]
                 }
-                // [END headless_email_auth]
         }
     }
     
