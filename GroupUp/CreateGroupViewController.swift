@@ -85,12 +85,14 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
             self.present(alert, animated:true)
         }
         else {
-//            let rootRef = FIRDatabase.database().reference()
-//            let groupsRef = rootRef.child("Groups")
-//            let newRef = groupsRef.child(self.groupNameField.text!)
-//            let group:[String: String] = ["Members": addMembers]
-//            
-//            newRef.setValue(group)
+            let rootRef = FIRDatabase.database().reference()
+            let groupsRef = rootRef.child("Groups")
+            let newRef = groupsRef.child(self.groupNameField.text!)
+            //let groupData:[String: [String]] = ["Members": membersList]
+            
+            newRef.setValue(membersList)
+            print(addMembers)
+            print(membersList)
             
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             let managedContext = appDelegate.persistentContainer.viewContext
