@@ -14,6 +14,7 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
     
     @IBOutlet weak var groupNameField: UITextField!
     @IBOutlet weak var membersTable: UITableView!
+    @IBOutlet weak var destTimePicker: UIDatePicker!
     
     public var username:String = ""
     private var addMembers:String = ""
@@ -99,6 +100,13 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
             let entity =  NSEntityDescription.entity(forEntityName: "Group", in: managedContext)
             let group = NSManagedObject(entity:entity!, insertInto:managedContext)
             
+            
+            let date = destTimePicker.date
+            let calendar = NSCalendar.current
+            let components = calendar.dateComponents([.hour, .minute], from: date)
+            
+            group.setValue(components.hour, forKey: "timeHours")
+            group.setValue(components.minute, forKey: "timeMinutes")
             group.setValue(groupNameField.text!, forKey:"groupName")
             group.setValue(addMembers, forKey:"groupMembers")
             group.setValue(username, forKey:"groupLeader")

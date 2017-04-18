@@ -15,6 +15,7 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var membersTable: UITableView!
     @IBOutlet weak var etaLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
+    @IBOutlet weak var destTimeLabel: UILabel!
     
     private var membersList = [String]()
     private var groups = [NSManagedObject]()
@@ -32,7 +33,51 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
         NotificationCenter.default.addObserver(self, selector: #selector(getETA(notification:)), name: NSNotification.Name(rawValue: "setRoute"), object: nil)
         setupMembersArray()
         addressLabel.text? = locAddress
-        formatETA()
+        //formatETA()
+        
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Group")
+        fetchRequest.predicate = NSPredicate(format: "groupName == %@", groupName)
+        var fetchedResults:[NSManagedObject]? = nil
+        
+        do {
+            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
+        }
+        catch {
+            let nserror = error as NSError
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
+        
+        if let results = fetchedResults {
+            groups = results
+        } else {
+            print("Could not fetch")
+        }
+        
+        let hours:Int = groups[0].value(forKey: "timeHours") as! Int
+        let minutes:Int = groups[0].value(forKey: "timeMinutes") as! Int
+        
+        destTimeLabel.text = "\(hours) hr \(minutes) min"
+        
+        let eta = groups[0].value(forKey: "eta") as? Double
+        let etaHours = floor(eta!/3600)
+        let etaMinutes = floor((eta! - etaHours*3600)/60)
+        let etaSeconds = eta! - etaHours*3600 - etaMinutes*60
+        
+        let calcMin = minutes - Int(etaMinutes)
+        
+        if calcMin < 0 {
+            etaLabel.text = "\(hours-Int(etaHours)-1) : \(60+minutes-Int(etaMinutes))"
+        }
+        else {
+            etaLabel.text = "\(hours-Int(etaHours)) : \(minutes-Int(etaMinutes))"
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -137,15 +182,15 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
             let minutes = floor((self.locETA - hours*3600)/60)
             let seconds = self.locETA - hours*3600 - minutes*60
             
-            if Int(hours) > 0 {
-                self.etaLabel.text? = "\(Int(hours)) hr \(Int(minutes)) min"
-            }
-            else if Int(minutes) > 4 {
-                self.etaLabel.text? = "\(Int(minutes)) min"
-            }
-            else {
-                self.etaLabel.text? = "\(Int(minutes)) min \(Int(seconds)) sec"
-            }
+//            if Int(hours) > 0 {
+//                self.etaLabel.text? = "\(Int(hours)) hr \(Int(minutes)) min"
+//            }
+//            else if Int(minutes) > 4 {
+//                self.etaLabel.text? = "\(Int(minutes)) min"
+//            }
+//            else {
+//                self.etaLabel.text? = "\(Int(minutes)) min \(Int(seconds)) sec"
+//            }
         }
     }
     
