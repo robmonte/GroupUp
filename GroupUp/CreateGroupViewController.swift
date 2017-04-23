@@ -92,31 +92,37 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
             let newRef = groupsRef.child(self.groupNameField.text!)
 //            let groupData:[String: [String]] = ["Members": membersList]
             
-            newRef.setValue(membersList)
+            var membersDict = [String: String]()
+            
+            for mem in membersList {
+                membersDict[mem] = mem
+            }
+            newRef.setValue(membersDict)
+            //newRef.setValue(membersList)
             print(membersList)
             
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.persistentContainer.viewContext
-            let entity =  NSEntityDescription.entity(forEntityName: "Group", in: managedContext)
-            let group = NSManagedObject(entity:entity!, insertInto:managedContext)
-            
-            let date = destTimePicker.date
-            let calendar = NSCalendar.current
-            let components = calendar.dateComponents([.hour, .minute], from: date)
-            
-            group.setValue(components.hour, forKey: "timeHours")
-            group.setValue(components.minute, forKey: "timeMinutes")
-            group.setValue(groupNameField.text!, forKey:"groupName")
-            group.setValue(addMembers, forKey:"groupMembers")
-            group.setValue(username, forKey:"groupLeader")
-            do {
-                try managedContext.save()
-            }
-            catch {
-                let nserror = error as NSError
-                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-                abort()
-            }
+//            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//            let managedContext = appDelegate.persistentContainer.viewContext
+//            let entity =  NSEntityDescription.entity(forEntityName: "Group", in: managedContext)
+//            let group = NSManagedObject(entity:entity!, insertInto:managedContext)
+//            
+//            let date = destTimePicker.date
+//            let calendar = NSCalendar.current
+//            let components = calendar.dateComponents([.hour, .minute], from: date)
+//            
+//            group.setValue(components.hour, forKey: "timeHours")
+//            group.setValue(components.minute, forKey: "timeMinutes")
+//            group.setValue(groupNameField.text!, forKey:"groupName")
+//            group.setValue(addMembers, forKey:"groupMembers")
+//            group.setValue(username, forKey:"groupLeader")
+//            do {
+//                try managedContext.save()
+//            }
+//            catch {
+//                let nserror = error as NSError
+//                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+//                abort()
+//            }
             
             confirmed = true
             _ = navigationController?.popViewController(animated:true)

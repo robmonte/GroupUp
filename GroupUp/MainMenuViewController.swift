@@ -64,5 +64,8 @@ class MainMenuViewController: UIViewController {
         else if let destinationVC = segue.destination as? CreateGroupViewController {
             destinationVC.username = self.username
         }
+        else if let destinationVC = segue.destination as? GroupsListTableViewController {
+            destinationVC.username = self.username
+        }
     }
 }

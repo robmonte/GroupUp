@@ -12,7 +12,11 @@ import Firebase
 
 class GroupsListTableViewController: UITableViewController {
     
-    private var groups = [NSManagedObject]()
+    @IBOutlet var groupTable: UITableView!
+    
+    //private var groups = [NSManagedObject]()
+    private var groups = [String]()
+    public var username:String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,40 +54,64 @@ class GroupsListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "groupsListID", for: indexPath)
         
-        let groupName:String? = groups[indexPath.row].value(forKey: "groupName") as? String
-        cell.textLabel?.text = groupName!
+//        let groupName:String? = groups[indexPath.row].value(forKey: "groupName") as? String
+//        cell.textLabel?.text = groupName!
+        
+        cell.textLabel?.text = groups[indexPath.row]
         
         return cell
     }
     
     func loadGroups() {
+        let rootRef = FIRDatabase.database().reference()
+        let groupsRef = rootRef.child("Groups")
         
-//        let rootRef = FIRDatabase.database().reference()
-//        let groupsRef = rootRef.child("Groups")
-//        
+        let query = groupsRef.queryOrdered(byChild: username).queryEqual(toValue: username)
+        
+        query.observe(.value, with: { snapshot in
+            let userGroups = snapshot.value as? NSDictionary
+            let retList = userGroups?.allKeys as? [String]
+            print(retList ?? "")
+            
+            self.groups = retList!
+            
+            DispatchQueue.main.async {
+                self.groupTable.reloadData()
+            }
+        })
+        
+        
+//        groupsRef.observe(.value, with: { snapshot in
+//            //print(snapshot.value)
+//            print ("checking if group exists!!!")
+//            var exists = snapshot.hasChild("Groups/new")
+//            var glist = snapshot.value
+//            print(glist)
+//        })
+        
 //        print(rootRef.value(forKey: "Groups"))
         
 //        print(groupsRef.value(forKey: "Groups"))
         
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Group")
-        var fetchedResults:[NSManagedObject]? = nil
-        
-        do {
-            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
-        }
-        catch {
-            let nserror = error as NSError
-            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-            abort()
-        }
-        
-        if let results = fetchedResults {
-            groups = results
-        } else {
-            print("Could not fetch")
-        }
+//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//        let managedContext = appDelegate.persistentContainer.viewContext
+//        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Group")
+//        var fetchedResults:[NSManagedObject]? = nil
+//        
+//        do {
+//            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
+//        }
+//        catch {
+//            let nserror = error as NSError
+//            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+//            abort()
+//        }
+//        
+//        if let results = fetchedResults {
+//            groups = results
+//        } else {
+//            print("Could not fetch")
+//        }
     }
     
     // MARK: - Navigation
@@ -93,9 +121,10 @@ class GroupsListTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
         if let destinationVC = segue.destination as? GroupDetailsViewController {
             let index = tableView.indexPathForSelectedRow?.row
-            let groupName:String? = groups[index!].value(forKey: "groupName") as? String
+            //let groupName:String? = groups[index!].value(forKey: "groupName") as? String
+            let groupName:String = groups[index!]
             
-            destinationVC.groupName = groupName!
+            destinationVC.groupName = groupName
         }
     }
 

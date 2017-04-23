@@ -74,7 +74,7 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
 //        let etaSeconds = eta! - etaHours*3600 - etaMinutes*60
         
         let calcMin = minutes - Int(etaMinutes)
-        var calcHours = (hours - Int(etaHours)-1) % 12
+        var calcHours = (hours - Int(etaHours)) % 12
         if calcHours == 0 {
             calcHours = 12
         }

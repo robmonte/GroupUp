@@ -140,7 +140,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
                 }
             }
         }
-        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -216,10 +215,6 @@ extension MapViewController : MKMapViewDelegate {
         setButton.setTitleColor(UIColor.cyan, for: UIControlState.highlighted)
         setButton.addTarget(self, action: #selector(MapViewController.setRoute), for: .touchUpInside)
         pinView?.rightCalloutAccessoryView = setButton
-        
-        
-        
-        
         
         return pinView
     }
