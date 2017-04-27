@@ -17,7 +17,7 @@ class GroupsListTableViewController: UITableViewController {
     //private var groups = [NSManagedObject]()
     private var groups = [String]()
     public var username:String = ""
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -48,6 +48,8 @@ class GroupsListTableViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        IJProgressView.shared.showProgressView(self.view)
+        
         self.navigationController?.setNavigationBarHidden(false, animated:true)
     }
     
@@ -63,6 +65,9 @@ class GroupsListTableViewController: UITableViewController {
     }
     
     func loadGroups() {
+        
+        
+        
         let rootRef = FIRDatabase.database().reference()
         let groupsRef = rootRef.child("Groups")
         
@@ -77,6 +82,7 @@ class GroupsListTableViewController: UITableViewController {
             
             DispatchQueue.main.async {
                 self.groupTable.reloadData()
+                IJProgressView.shared.hideProgressView()
             }
         })
         

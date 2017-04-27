@@ -81,51 +81,39 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
             alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
             self.present(alert, animated:true)
         }
-        else if checkDuplicateGroup() != 0 {
-            let alert = UIAlertController(title:"Invalid input", message:"Group already exists.", preferredStyle:UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
-            self.present(alert, animated:true)
-        }
         else {
-            let rootRef = FIRDatabase.database().reference()
-            let groupsRef = rootRef.child("Groups")
-            let newRef = groupsRef.child(self.groupNameField.text!)
-//            let groupData:[String: [String]] = ["Members": membersList]
+            let myRootRef = FIRDatabase.database().reference()
+            var exists = false
             
-            var membersDict = [String: String]()
-            
-            for mem in membersList {
-                membersDict[mem] = mem
-            }
-            newRef.setValue(membersDict)
-            //newRef.setValue(membersList)
-            print(membersList)
-            
-//            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-//            let managedContext = appDelegate.persistentContainer.viewContext
-//            let entity =  NSEntityDescription.entity(forEntityName: "Group", in: managedContext)
-//            let group = NSManagedObject(entity:entity!, insertInto:managedContext)
-//            
-//            let date = destTimePicker.date
-//            let calendar = NSCalendar.current
-//            let components = calendar.dateComponents([.hour, .minute], from: date)
-//            
-//            group.setValue(components.hour, forKey: "timeHours")
-//            group.setValue(components.minute, forKey: "timeMinutes")
-//            group.setValue(groupNameField.text!, forKey:"groupName")
-//            group.setValue(addMembers, forKey:"groupMembers")
-//            group.setValue(username, forKey:"groupLeader")
-//            do {
-//                try managedContext.save()
-//            }
-//            catch {
-//                let nserror = error as NSError
-//                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-//                abort()
-//            }
-            
-            confirmed = true
-            _ = navigationController?.popViewController(animated:true)
+            myRootRef.observe(.value, with: { snapshot in
+                print ("checking if group \(self.groupNameField.text!) exists!!!")
+                exists = snapshot.hasChild("Groups/\(self.groupNameField.text!)")
+                print(exists)
+                
+                if exists {
+                    let alert = UIAlertController(title:"Invalid input", message:"Group already exists.", preferredStyle:UIAlertControllerStyle.alert)
+                    alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
+                    self.present(alert, animated:true)
+                }
+                else {
+                    let rootRef = FIRDatabase.database().reference()
+                    let groupsRef = rootRef.child("Groups")
+                    let newRef = groupsRef.child(self.groupNameField.text!)
+                    //            let groupData:[String: [String]] = ["Members": membersList]
+                    
+                    var membersDict = [String: String]()
+                    
+                    for mem in self.membersList {
+                        membersDict[mem] = mem
+                    }
+                    newRef.setValue(membersDict)
+                    //newRef.setValue(membersList)
+                    print(self.membersList)
+
+                    self.confirmed = true
+                    _ = self.navigationController?.popViewController(animated:true)
+                }
+            })
         }
     }
 
@@ -173,31 +161,6 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
         })
         alert.addAction(UIAlertAction(title:"Cancel", style:UIAlertActionStyle.cancel))
         self.present(alert, animated:true)
-    }
-    
-    func checkDuplicateGroup() -> Int {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Group")
-        fetchRequest.predicate = NSPredicate(format: "groupName == %@", groupNameField.text!)
-        var fetchedResults:[NSManagedObject]? = nil
-        
-        do {
-            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
-        }
-        catch {
-            let nserror = error as NSError
-            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-            abort()
-        }
-        
-        if let results = fetchedResults {
-            groups = results
-        } else {
-            print("Could not fetch")
-        }
-        
-        return groups.count
     }
     
     /*

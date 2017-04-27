@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Firebase
 
 class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -37,59 +38,59 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Group")
-        fetchRequest.predicate = NSPredicate(format: "groupName == %@", groupName)
-        var fetchedResults:[NSManagedObject]? = nil
-        
-        do {
-            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
-        }
-        catch {
-            let nserror = error as NSError
-            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-            abort()
-        }
-        
-        if let results = fetchedResults {
-            groups = results
-        } else {
-            print("Could not fetch")
-        }
-        
-        let hours:Int = groups[0].value(forKey: "timeHours") as! Int
-        let minutes:Int = groups[0].value(forKey: "timeMinutes") as! Int
-        let minutesLeading = String(format: "%02d", minutes)
-        var hours12 = hours%12
-        if hours12 == 0 {
-            hours12 = 12
-        }
-        
-        destTimeLabel.text = "\(hours12):\(minutesLeading)"
-        
-        let eta = groups[0].value(forKey: "eta") as? Double
-        let etaHours = floor(eta!/3600)
-        let etaMinutes = floor((eta! - etaHours*3600)/60)
-//        let etaSeconds = eta! - etaHours*3600 - etaMinutes*60
-        
-        let calcMin = minutes - Int(etaMinutes)
-        var calcHours = (hours - Int(etaHours)) % 12
-        if calcHours == 0 {
-            calcHours = 12
-        }
-        else if calcHours < 0 {
-            calcHours = 12 + calcHours
-        }
-        
-        if calcMin < 0 {
-            let minLeading = String(format: "%02d", 60+minutes-Int(etaMinutes))
-            etaLabel.text = "\(calcHours):\(minLeading)"
-        }
-        else {
-            let minLeading = String(format: "%02d", minutes-Int(etaMinutes))
-            etaLabel.text = "\(calcHours):\(minLeading)"
-        }
+//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//        let managedContext = appDelegate.persistentContainer.viewContext
+//        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Group")
+//        fetchRequest.predicate = NSPredicate(format: "groupName == %@", groupName)
+//        var fetchedResults:[NSManagedObject]? = nil
+//        
+//        do {
+//            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
+//        }
+//        catch {
+//            let nserror = error as NSError
+//            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+//            abort()
+//        }
+//        
+//        if let results = fetchedResults {
+//            groups = results
+//        } else {
+//            print("Could not fetch")
+//        }
+//        
+//        let hours:Int = groups[0].value(forKey: "timeHours") as! Int
+//        let minutes:Int = groups[0].value(forKey: "timeMinutes") as! Int
+//        let minutesLeading = String(format: "%02d", minutes)
+//        var hours12 = hours%12
+//        if hours12 == 0 {
+//            hours12 = 12
+//        }
+//        
+//        destTimeLabel.text = "\(hours12):\(minutesLeading)"
+//        
+//        let eta = groups[0].value(forKey: "eta") as? Double
+//        let etaHours = floor(eta!/3600)
+//        let etaMinutes = floor((eta! - etaHours*3600)/60)
+////        let etaSeconds = eta! - etaHours*3600 - etaMinutes*60
+//        
+//        let calcMin = minutes - Int(etaMinutes)
+//        var calcHours = (hours - Int(etaHours)) % 12
+//        if calcHours == 0 {
+//            calcHours = 12
+//        }
+//        else if calcHours < 0 {
+//            calcHours = 12 + calcHours
+//        }
+//        
+//        if calcMin < 0 {
+//            let minLeading = String(format: "%02d", 60+minutes-Int(etaMinutes))
+//            etaLabel.text = "\(calcHours):\(minLeading)"
+//        }
+//        else {
+//            let minLeading = String(format: "%02d", minutes-Int(etaMinutes))
+//            etaLabel.text = "\(calcHours):\(minLeading)"
+//        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -120,35 +121,52 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     private func setupMembersArray() {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Group")
-        fetchRequest.predicate = NSPredicate(format: "groupName == %@", groupName)
-        var fetchedResults:[NSManagedObject]? = nil
+        let rootRef = FIRDatabase.database().reference()
+        let groupsRef = rootRef.child("Groups")
+        let group = groupsRef.child(groupName)
         
-        do {
-            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
-        }
-        catch {
-            let nserror = error as NSError
-            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-            abort()
-        }
+        group.observe(.value, with: { snapshot in
+            let userGroup = snapshot.value as? NSDictionary
+            let users = userGroup?.allKeys as? [String]
+            print(users!)
+            self.membersList = users!
+            
+            DispatchQueue.main.async {
+                self.membersTable.reloadData()
+            }
+        })
         
-        if let results = fetchedResults {
-            groups = results
-        } else {
-            print("Could not fetch")
-        }
         
-        if let eta = groups[0].value(forKey: "eta") as? Double {
-            self.locETA = eta
-        }
-        if let address = groups[0].value(forKey: "address") as? String {
-            self.locAddress = address
-        }
-        let names:String? = groups[0].value(forKey: "groupMembers") as? String
-        membersList = names!.components(separatedBy: ",")
+        
+//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//        let managedContext = appDelegate.persistentContainer.viewContext
+//        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Group")
+//        fetchRequest.predicate = NSPredicate(format: "groupName == %@", groupName)
+//        var fetchedResults:[NSManagedObject]? = nil
+//        
+//        do {
+//            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
+//        }
+//        catch {
+//            let nserror = error as NSError
+//            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+//            abort()
+//        }
+//        
+//        if let results = fetchedResults {
+//            groups = results
+//        } else {
+//            print("Could not fetch")
+//        }
+//        
+//        if let eta = groups[0].value(forKey: "eta") as? Double {
+//            self.locETA = eta
+//        }
+//        if let address = groups[0].value(forKey: "address") as? String {
+//            self.locAddress = address
+//        }
+//        let names:String? = groups[0].value(forKey: "groupMembers") as? String
+//        membersList = names!.components(separatedBy: ",")
     }
     
     func getETA(notification: Notification) {
