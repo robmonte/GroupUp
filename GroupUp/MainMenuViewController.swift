@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import UserNotifications
 
 class MainMenuViewController: UIViewController {
     
@@ -20,7 +21,7 @@ class MainMenuViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Do any additional setup after loading the view.
     }
     
@@ -45,6 +46,18 @@ class MainMenuViewController: UIViewController {
         handle = FIRAuth.auth()?.addStateDidChangeListener() { (auth, user) in
             self.usernameLabel.text! = "Welcome back \((user?.displayName!)!)"
             self.username = (user?.displayName!)!
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        let notify = UNUserNotificationCenter.current()
+        notify.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+            if !granted {
+                print(error.debugDescription)
+            }
+            else {
+                print("Notification access granted.")
+            }
         }
     }
     

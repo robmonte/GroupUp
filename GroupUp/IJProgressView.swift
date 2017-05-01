@@ -3,7 +3,9 @@
 //  IJProgressView
 //
 //  Created by Isuru Nanayakkara on 1/14/15. Modified by Robert Montefusco on 4/27/2017
+//  Copyright (c) 2015 Appex. All rights reserved.
 //
+
 import UIKit
 
 open class IJProgressView {
@@ -39,6 +41,7 @@ open class IJProgressView {
         progressView.addSubview(activityIndicator)
         containerView.addSubview(progressView)
         view.addSubview(containerView)
+        view.bringSubview(toFront: containerView)
         
         activityIndicator.startAnimating()
     }

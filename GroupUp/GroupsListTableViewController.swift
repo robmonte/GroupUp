@@ -21,6 +21,7 @@ class GroupsListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        IJProgressView.shared.showProgressView(self.view)
         loadGroups()
         
         // Uncomment the following line to preserve selection between presentations
@@ -44,12 +45,15 @@ class GroupsListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return groups.count
+        if groups.count == 1 && groups[0] == "" {
+            return 0
+        }
+        else {
+            return groups.count
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        IJProgressView.shared.showProgressView(self.view)
-        
         self.navigationController?.setNavigationBarHidden(false, animated:true)
     }
     
@@ -65,9 +69,6 @@ class GroupsListTableViewController: UITableViewController {
     }
     
     func loadGroups() {
-        
-        
-        
         let rootRef = FIRDatabase.database().reference()
         let groupsRef = rootRef.child("Groups")
         
@@ -76,9 +77,9 @@ class GroupsListTableViewController: UITableViewController {
         query.observe(.value, with: { snapshot in
             let userGroups = snapshot.value as? NSDictionary
             let retList = userGroups?.allKeys as? [String]
-            print(retList ?? "")
+            print(retList ?? [""])
             
-            self.groups = retList!
+            self.groups = retList ?? [""]
             
             DispatchQueue.main.async {
                 self.groupTable.reloadData()

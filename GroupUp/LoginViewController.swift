@@ -9,8 +9,9 @@
 import UIKit
 import CoreData
 import Firebase
+import MapKit
 
-class LoginViewController: UIViewController, UITextFieldDelegate {
+class LoginViewController: UIViewController, UITextFieldDelegate, CLLocationManagerDelegate {
 
     @IBOutlet weak var emailField: LoginTextField!
     @IBOutlet weak var passwordField: LoginTextField!
@@ -19,6 +20,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var createAccountButton: UIButton!
     
     private var accounts = [NSManagedObject]()
+    private var location = CLLocationManager()
     
     let defaults = UserDefaults.standard
     
@@ -41,6 +43,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         emailField.attributedPlaceholder = NSAttributedString(string: emailField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.gray, NSFontAttributeName: UIFont.systemFont(ofSize: 20)])
         
         passwordField.attributedPlaceholder = NSAttributedString(string: passwordField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.gray, NSFontAttributeName: UIFont.systemFont(ofSize: 20)])
+        
+        let getRefresh:Int = defaults.object(forKey: "rememberRefresh") as? Int ?? 5
+        print(getRefresh)
+        SettingsViewController.refreshRate = getRefresh
     }
 
     override func didReceiveMemoryWarning() {
@@ -71,11 +77,28 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.view.endEditing(true)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        if(CLLocationManager.locationServicesEnabled()) {
+            location.delegate = self
+            location.desiredAccuracy = kCLLocationAccuracyBest
+            location.requestAlwaysAuthorization()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedAlways {
+            print("Location access granted.")
+        }
+        else {
+            print("User declined location privileges.")
+        }
+    }
+    
     @IBAction func loginFirebase(_ sender: Any) {
         if let email = self.emailField.text, let password = self.passwordField.text {
                 FIRAuth.auth()?.signIn(withEmail: email, password: password) { (user, error) in
-                    if let error = error {
-                        self.popup(title: "Error", message: error.localizedDescription)
+                    if error != nil {
+                        self.popup(title: "Invalid input", message: "Username or password is incorrect. Please try again.")
                         return
                     }
                     

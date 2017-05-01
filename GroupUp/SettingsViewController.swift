@@ -12,8 +12,11 @@ import Firebase
 class SettingsViewController: UIViewController {
 
     @IBOutlet weak var rememberUsernameToggle: UISwitch!
+    @IBOutlet weak var refreshLabel: UILabel!
+    @IBOutlet weak var refreshStepper: UIStepper!
     
     public var email:String = ""
+    public static var refreshRate:Int = 5
     
     let defaults = UserDefaults.standard
     
@@ -21,6 +24,7 @@ class SettingsViewController: UIViewController {
         super.viewDidLoad()
         
         rememberUsernameToggle.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
+        
         let check:Bool = defaults.object(forKey: "rememberState") as? Bool ?? false
         if check == true {
             rememberUsernameToggle.setOn(true, animated: true)
@@ -28,6 +32,18 @@ class SettingsViewController: UIViewController {
         else {
             rememberUsernameToggle.setOn(false, animated: true)
         }
+        
+        let getRefresh:Int = defaults.object(forKey: "rememberRefresh") as? Int ?? 5
+        print(getRefresh)
+        SettingsViewController.refreshRate = getRefresh
+        refreshStepper.value = Double(getRefresh)
+        if getRefresh == 1 {
+            refreshStepper.stepValue = 4
+        }
+        else {
+            refreshStepper.stepValue = 5
+        }
+        refreshLabel.text = "\(SettingsViewController.refreshRate)"
     }
     
     override func didReceiveMemoryWarning() {
@@ -58,6 +74,22 @@ class SettingsViewController: UIViewController {
             defaults.set(blank, forKey: "rememberEmail")
             defaults.set(false, forKey: "rememberState")
         }        
+    }
+    
+    @IBAction func updateRefreshRate(_ sender: UIStepper) {
+        let val = Int(sender.value)
+        refreshLabel.text = val.description
+        
+        SettingsViewController.refreshRate = val
+        
+        if val == 1 {
+            sender.stepValue = 4
+        }
+        else {
+            sender.stepValue = 5
+        }
+        
+        defaults.set(val, forKey: "rememberRefresh")
     }
     
     @IBAction func deleteAccount(_ sender: Any) {

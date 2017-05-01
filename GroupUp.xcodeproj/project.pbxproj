@@ -12,6 +12,7 @@
 		6876C4091E9F1B9700CFF880 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6876C4081E9F1B9700CFF880 /* GoogleService-Info.plist */; };
 		9B0097FF2A9B56A485F3FA63 /* Pods_GroupUp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 482A663DCE40470BF85F5937 /* Pods_GroupUp.framework */; };
 		CC00DA921EB279E000345CBF /* IJProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC00DA911EB279E000345CBF /* IJProgressView.swift */; };
+		CC00DA961EB3DE0100345CBF /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC00DA951EB3DE0100345CBF /* LocationManager.swift */; };
 		CC2FA0B41E7BF5F500FCC57C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2FA0B31E7BF5F500FCC57C /* LoginViewController.swift */; };
 		CC56C8971E7BF8E300AAEE22 /* login_background.png in Resources */ = {isa = PBXBuildFile; fileRef = CC56C8951E7BF8E300AAEE22 /* login_background.png */; };
 		CC56C8981E7BF8E300AAEE22 /* logo_square.png in Resources */ = {isa = PBXBuildFile; fileRef = CC56C8961E7BF8E300AAEE22 /* logo_square.png */; };
@@ -39,6 +40,7 @@
 		50E8EEE61E80BD1600EF42B6 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapViewController.swift; path = GroupUp/MapViewController.swift; sourceTree = "<group>"; };
 		6876C4081E9F1B9700CFF880 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CC00DA911EB279E000345CBF /* IJProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IJProgressView.swift; path = GroupUp/IJProgressView.swift; sourceTree = "<group>"; };
+		CC00DA951EB3DE0100345CBF /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationManager.swift; path = GroupUp/LocationManager.swift; sourceTree = "<group>"; };
 		CC2FA0B31E7BF5F500FCC57C /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = GroupUp/LoginViewController.swift; sourceTree = "<group>"; };
 		CC56C8951E7BF8E300AAEE22 /* login_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = login_background.png; path = GroupUp/login_background.png; sourceTree = "<group>"; };
 		CC56C8961E7BF8E300AAEE22 /* logo_square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo_square.png; path = GroupUp/logo_square.png; sourceTree = "<group>"; };
@@ -77,6 +79,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CC00DA941EB3DDA800345CBF /* HelperFunctions */ = {
+			isa = PBXGroup;
+			children = (
+				CC00DA911EB279E000345CBF /* IJProgressView.swift */,
+				CC00DA951EB3DE0100345CBF /* LocationManager.swift */,
+			);
+			name = HelperFunctions;
+			sourceTree = "<group>";
+		};
 		CC2FA0AE1E7BE8F800FCC57C /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -100,7 +111,6 @@
 				CCC4DF641E7E6BD5000B35FB /* MainMenuViewController.swift */,
 				50E8EEE61E80BD1600EF42B6 /* MapViewController.swift */,
 				CCC4DF661E7E6E77000B35FB /* SettingsViewController.swift */,
-				CC00DA911EB279E000345CBF /* IJProgressView.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -140,6 +150,7 @@
 				CC2FA0AE1E7BE8F800FCC57C /* Images */,
 				CC56C8A11E7D580600AAEE22 /* TextFields */,
 				CC56C89D1E7D568D00AAEE22 /* ViewControllers */,
+				CC00DA941EB3DDA800345CBF /* HelperFunctions */,
 				CCE2FACF1E74A4E900440D21 /* Products */,
 				CCC4DF711E7E87D1000B35FB /* Frameworks */,
 				ED39FFFEAC10B8DC19FAF360 /* Pods */,
@@ -312,6 +323,7 @@
 				CCC4DF6B1E7E7FC7000B35FB /* GroupsListTableViewController.swift in Sources */,
 				CC2FA0B41E7BF5F500FCC57C /* LoginViewController.swift in Sources */,
 				CC56C89C1E7D46F100AAEE22 /* LoginTextField.swift in Sources */,
+				CC00DA961EB3DE0100345CBF /* LocationManager.swift in Sources */,
 				CCC4DF701E7E8611000B35FB /* AlarmListViewController.swift in Sources */,
 				CCE2FADA1E74A4E900440D21 /* GroupUp.xcdatamodeld in Sources */,
 				50697AE51E835C5000C383FF /* LocationTableViewController.swift in Sources */,

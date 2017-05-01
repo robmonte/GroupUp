@@ -11,7 +11,6 @@ import MapKit
 import CoreLocation
 import UserNotifications
 
-
 protocol HandleMapSearch {
     func dropPinZoomIn(placemark:MKPlacemark)
 }
@@ -19,6 +18,11 @@ protocol HandleMapSearch {
 class MapViewController: UIViewController, CLLocationManagerDelegate{
 
     @IBOutlet weak var mapView: MKMapView!
+    
+    private var setAddress:String = ""
+    private var destLat:Double = 0.0
+    private var destLong:Double = 0.0
+    
     var locationManager: CLLocationManager!
     var locationSearchController: UISearchController?
     var selectedPin:MKPlacemark? = nil
@@ -102,11 +106,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
         if let selectedPin = selectedPin {
             let mapItem = MKMapItem(placemark: selectedPin)
             let dirRequest = MKDirectionsRequest()
-            dirRequest.destination = mapItem
             let src = MKMapItem.forCurrentLocation()
+            
+            dirRequest.destination = mapItem
             dirRequest.source = src
+            
+            destLat = (mapItem.placemark.location?.coordinate.latitude)!
+            destLong = (mapItem.placemark.location?.coordinate.longitude)!
+            
             let directions = MKDirections(request: dirRequest)
-            directions.calculate() {response, error in
+            directions.calculate() { response, error in
                 if error == nil {
                     if response != nil {
                         let route = response?.routes[0]
@@ -117,14 +126,14 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
                         let city = addressDict?["City"] ?? ""
                         let state = addressDict?["State"] ?? ""
                         let zip = addressDict?["ZIP"] ?? ""
-                        let address = "\(street) \(city) \(state) \(zip)"
+                        let address = "\(street)\n\(city), \(state) \(zip)"
                         
-                        let etaInfoDict: [String: Any] = ["ETA": (route?.expectedTravelTime)! , "Address": address]
+                        //let etaInfoDict: [String: Any] = ["ETA": (route?.expectedTravelTime)! , "Address": address]
+                        self.setAddress = address
                         
+                        //NotificationCenter.default.post(name: Notification.Name(rawValue: "setRoute"), object: nil, userInfo: etaInfoDict)
                         
-                        NotificationCenter.default.post(name: Notification.Name(rawValue: "setRoute"), object: nil, userInfo: etaInfoDict)
-                        
-                        let alertController = UIAlertController(title: "Destination Set", message: "Destination has been set", preferredStyle: UIAlertControllerStyle.alert)
+                        let alertController = UIAlertController(title: "Destination Set", message: "Destination has been set.", preferredStyle: UIAlertControllerStyle.alert)
                         
                         let OK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
                         }
@@ -150,6 +159,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        let views = self.navigationController?.viewControllers
+        if let create = views?[views!.count-1] as? CreateGroupViewController
+        {
+            create.setAddress = setAddress
+            create.destLat = destLat
+            create.destLong = destLong
+        }
     }
 
     /*
@@ -204,12 +223,8 @@ extension MapViewController : MKMapViewDelegate {
         pinView?.canShowCallout = true
         
         let smallSquare = CGSize(width: 30, height: 30)
-        //let button = UIButton(frame: CGRect(origin: CGPoint(x: 0,y: 0), size: smallSquare))
-        //button.backgroundColor = UIColor.blue
-        //button.addTarget(self, action: #selector(MapViewController.getDirections), for: .touchUpInside)
-        //pinView?.leftCalloutAccessoryView = button
-        
         let setButton = UIButton(frame: CGRect(origin: CGPoint(x: 0,y: 0), size: smallSquare))
+        
         setButton.setTitle("Set", for: UIControlState.normal)
         setButton.setTitleColor(UIColor.blue, for: UIControlState.normal)
         setButton.setTitleColor(UIColor.cyan, for: UIControlState.highlighted)

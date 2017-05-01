@@ -16,9 +16,14 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
     @IBOutlet weak var membersTable: UITableView!
     @IBOutlet weak var destTimePicker: UIDatePicker!
     
+    public var confirmedUsername:Bool = false
+    public var confirmedGroupname:Bool = false
     public var username:String = ""
-    public var confirmed:Bool = false
+    public var setAddress:String = ""
+    public var destLat:Double = 0.0
+    public var destLong:Double = 0.0
     private var addMembers:String = ""
+    
     private var accounts = [NSManagedObject]()
     private var groups = [NSManagedObject]()
     private var membersList = [String]()
@@ -41,6 +46,8 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        print(setAddress)
+        
         self.navigationController?.setNavigationBarHidden(false, animated:true)
     }
     
@@ -81,16 +88,25 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
             alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
             self.present(alert, animated:true)
         }
+        else if setAddress == "" {
+            let alert = UIAlertController(title:"Invalid input", message:"Please choose a destination from the map.", preferredStyle:UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
+            self.present(alert, animated:true)
+        }
         else {
             let myRootRef = FIRDatabase.database().reference()
             var exists = false
+            
+            let date = destTimePicker.date
+            let calendar = NSCalendar.current
+            let timeComponents = calendar.dateComponents([.hour, .minute], from: date)
             
             myRootRef.observe(.value, with: { snapshot in
                 print ("checking if group \(self.groupNameField.text!) exists!!!")
                 exists = snapshot.hasChild("Groups/\(self.groupNameField.text!)")
                 print(exists)
                 
-                if exists {
+                if exists && !self.confirmedGroupname {
                     let alert = UIAlertController(title:"Invalid input", message:"Group already exists.", preferredStyle:UIAlertControllerStyle.alert)
                     alert.addAction(UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
                     self.present(alert, animated:true)
@@ -99,18 +115,24 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
                     let rootRef = FIRDatabase.database().reference()
                     let groupsRef = rootRef.child("Groups")
                     let newRef = groupsRef.child(self.groupNameField.text!)
-                    //            let groupData:[String: [String]] = ["Members": membersList]
                     
-                    var membersDict = [String: String]()
-                    
+                    var membersDict = [String: Any]()
                     for mem in self.membersList {
                         membersDict[mem] = mem
                     }
+                    membersDict["_@+Address**"] = self.setAddress
+                    membersDict["_@+Latitude**"] = self.destLat
+                    membersDict["_@+Longitude**"] = self.destLong
+                    membersDict["_@+Leader**"] = self.username
+                    membersDict["_@+Hours**"] = timeComponents.hour
+                    membersDict["_@+Minutes**"] = timeComponents.minute
+                    
+                    print(membersDict)
                     newRef.setValue(membersDict)
-                    //newRef.setValue(membersList)
                     print(self.membersList)
 
-                    self.confirmed = true
+                    self.confirmedUsername = true
+                    self.confirmedGroupname = true
                     _ = self.navigationController?.popViewController(animated:true)
                 }
             })
@@ -144,12 +166,12 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
                     self.present(noSuchUserAlert, animated:true)
                 }
                 else {
-                    if self.membersList.contains(user) && !self.confirmed {
+                    if self.membersList.contains(user) && !self.confirmedUsername {
                         let alreadyInGroupAlert = UIAlertController(title:"Invalid input", message:"Username is already a member of the group.", preferredStyle:UIAlertControllerStyle.alert)
                         alreadyInGroupAlert.addAction(UIKit.UIAlertAction(title:"OK", style:UIAlertActionStyle.cancel))
                         self.present(alreadyInGroupAlert, animated:true)
                     }
-                    else {
+                    else if !self.confirmedUsername {
                         self.addMembers += ",\(user)"
                         self.membersList.append("\(user)")
                         DispatchQueue.main.async {
