@@ -46,7 +46,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
         
         let searchBar = locationSearchController!.searchBar
         searchBar.sizeToFit()
-        searchBar.placeholder = "Search for places"
         navigationItem.titleView = locationSearchController?.searchBar
         
         locationSearchController?.hidesNavigationBarDuringPresentation = false
@@ -92,7 +91,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
                         let route = response?.routes[0]
                         self.mapView.add((route?.polyline)!)
                         print(route?.expectedTravelTime ?? 0)
-                        
                     }
                 }
                 else {
@@ -135,13 +133,17 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
                         
                         let alertController = UIAlertController(title: "Destination Set", message: "Destination has been set.", preferredStyle: UIAlertControllerStyle.alert)
                         
-                        let OK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
+                        let OK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
+                            (action:UIAlertAction) in
                         }
                         
                         alertController.addAction(OK)
-                        
                         self.present(alertController, animated: true)
                         
+                        if let first = self.mapView.overlays.first {
+                            let rect = self.mapView.overlays.reduce(first.boundingMapRect, { MKMapRectUnion($0, $1.boundingMapRect) })
+                            self.mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 100.0, left: 100.0, bottom: 100.0, right: 100.0), animated: true)
+                        }
                     }
                 }
                 else {
@@ -219,11 +221,14 @@ extension MapViewController : MKMapViewDelegate {
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         
         pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-        pinView?.pinTintColor = UIColor.orange
+        pinView?.pinTintColor = UIColor.red
         pinView?.canShowCallout = true
         
-        let smallSquare = CGSize(width: 30, height: 30)
+        let smallSquare = CGSize(width: 50, height: 35)
         let setButton = UIButton(frame: CGRect(origin: CGPoint(x: 0,y: 0), size: smallSquare))
+        setButton.layer.borderWidth = 1.5
+        setButton.layer.cornerRadius = 5
+        setButton.layer.borderColor = UIColor.blue.cgColor
         
         setButton.setTitle("Set", for: UIControlState.normal)
         setButton.setTitleColor(UIColor.blue, for: UIControlState.normal)
@@ -236,8 +241,10 @@ extension MapViewController : MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let renderer = MKPolylineRenderer(overlay: overlay)
+        
         renderer.strokeColor = UIColor.blue
         renderer.lineWidth = 3
+        
         return renderer
     }
 }

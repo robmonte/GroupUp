@@ -15,6 +15,7 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
     @IBOutlet weak var groupNameField: UITextField!
     @IBOutlet weak var membersTable: UITableView!
     @IBOutlet weak var destTimePicker: UIDatePicker!
+    @IBOutlet weak var setDestButton: UIButton!
     
     public var confirmedUsername:Bool = false
     public var confirmedGroupname:Bool = false
@@ -36,6 +37,16 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
         membersTable.dataSource = self
         addMembers = "\(username)"
         membersList.append(addMembers)
+        
+        self.title = "Create a Group"
+        groupNameField.layer.borderColor = UIColor.gray.cgColor
+        groupNameField.layer.borderWidth = 1.0
+        groupNameField.layer.cornerRadius = 5
+        groupNameField.attributedPlaceholder = NSAttributedString(string: groupNameField.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.gray])
+        
+        setDestButton.layer.borderWidth = 1.0
+        setDestButton.layer.borderColor = UIColor(hex: 0x007AFF, alpha: 1.0).cgColor
+        setDestButton.layer.cornerRadius = 5
         
         // Do any additional setup after loading the view.
     }
@@ -62,6 +73,7 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "membersID")
+        cell.backgroundColor = self.view.backgroundColor
         
         if indexPath.row == 0 {
             cell.textLabel?.text = "Leader: " + membersList[indexPath.row]
@@ -98,10 +110,10 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
             var exists = false
             
             let date = destTimePicker.date
-            let calendar = NSCalendar.current
+            let calendar = Calendar.current
             let timeComponents = calendar.dateComponents([.hour, .minute], from: date)
             
-            myRootRef.observe(.value, with: { snapshot in
+            myRootRef.observeSingleEvent(of: .value, with: { snapshot in
                 print ("checking if group \(self.groupNameField.text!) exists!!!")
                 exists = snapshot.hasChild("Groups/\(self.groupNameField.text!)")
                 print(exists)
@@ -185,13 +197,11 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
         self.present(alert, animated:true)
     }
     
-    /*
     // MARK: - Navigation
-
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        let backItem = UIBarButtonItem()
+        backItem.title = "Back"
+        navigationItem.backBarButtonItem = backItem
     }
-    */
 }

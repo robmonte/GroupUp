@@ -14,12 +14,14 @@
 		CC00DA921EB279E000345CBF /* IJProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC00DA911EB279E000345CBF /* IJProgressView.swift */; };
 		CC00DA961EB3DE0100345CBF /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC00DA951EB3DE0100345CBF /* LocationManager.swift */; };
 		CC2FA0B41E7BF5F500FCC57C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2FA0B31E7BF5F500FCC57C /* LoginViewController.swift */; };
-		CC56C8971E7BF8E300AAEE22 /* login_background.png in Resources */ = {isa = PBXBuildFile; fileRef = CC56C8951E7BF8E300AAEE22 /* login_background.png */; };
 		CC56C8981E7BF8E300AAEE22 /* logo_square.png in Resources */ = {isa = PBXBuildFile; fileRef = CC56C8961E7BF8E300AAEE22 /* logo_square.png */; };
 		CC56C89C1E7D46F100AAEE22 /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC56C89B1E7D46F100AAEE22 /* LoginTextField.swift */; };
 		CC56C89F1E7D576000AAEE22 /* CreateAccountTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC56C89E1E7D576000AAEE22 /* CreateAccountTextField.swift */; };
 		CC56C8C11E7D62DA00AAEE22 /* CreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC56C8C01E7D62DA00AAEE22 /* CreateAccountViewController.swift */; };
-		CCC4DF611E7E587D000B35FB /* settings_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = CCC4DF601E7E587D000B35FB /* settings_icon.png */; };
+		CC9E360A1EB8C4AB00A4E8C6 /* login_background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CC9E36091EB8C4AB00A4E8C6 /* login_background.jpg */; };
+		CC9E36121EB9358C00A4E8C6 /* ViewDirectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9E36111EB9358C00A4E8C6 /* ViewDirectionsViewController.swift */; };
+		CC9E36141EB9654800A4E8C6 /* NewAlarmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9E36131EB9654800A4E8C6 /* NewAlarmViewController.swift */; };
+		CC9E36161EB987A100A4E8C6 /* AlarmTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9E36151EB987A100A4E8C6 /* AlarmTableViewCell.swift */; };
 		CCC4DF651E7E6BD5000B35FB /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC4DF641E7E6BD5000B35FB /* MainMenuViewController.swift */; };
 		CCC4DF671E7E6E77000B35FB /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC4DF661E7E6E77000B35FB /* SettingsViewController.swift */; };
 		CCC4DF691E7E729F000B35FB /* CreateGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC4DF681E7E729F000B35FB /* CreateGroupViewController.swift */; };
@@ -42,12 +44,14 @@
 		CC00DA911EB279E000345CBF /* IJProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IJProgressView.swift; path = GroupUp/IJProgressView.swift; sourceTree = "<group>"; };
 		CC00DA951EB3DE0100345CBF /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationManager.swift; path = GroupUp/LocationManager.swift; sourceTree = "<group>"; };
 		CC2FA0B31E7BF5F500FCC57C /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = GroupUp/LoginViewController.swift; sourceTree = "<group>"; };
-		CC56C8951E7BF8E300AAEE22 /* login_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = login_background.png; path = GroupUp/login_background.png; sourceTree = "<group>"; };
 		CC56C8961E7BF8E300AAEE22 /* logo_square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo_square.png; path = GroupUp/logo_square.png; sourceTree = "<group>"; };
 		CC56C89B1E7D46F100AAEE22 /* LoginTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginTextField.swift; path = GroupUp/LoginTextField.swift; sourceTree = "<group>"; };
 		CC56C89E1E7D576000AAEE22 /* CreateAccountTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateAccountTextField.swift; path = GroupUp/CreateAccountTextField.swift; sourceTree = "<group>"; };
 		CC56C8C01E7D62DA00AAEE22 /* CreateAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateAccountViewController.swift; path = GroupUp/CreateAccountViewController.swift; sourceTree = "<group>"; };
-		CCC4DF601E7E587D000B35FB /* settings_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = settings_icon.png; path = GroupUp/settings_icon.png; sourceTree = "<group>"; };
+		CC9E36091EB8C4AB00A4E8C6 /* login_background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = login_background.jpg; path = GroupUp/login_background.jpg; sourceTree = "<group>"; };
+		CC9E36111EB9358C00A4E8C6 /* ViewDirectionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewDirectionsViewController.swift; path = GroupUp/ViewDirectionsViewController.swift; sourceTree = "<group>"; };
+		CC9E36131EB9654800A4E8C6 /* NewAlarmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NewAlarmViewController.swift; path = GroupUp/NewAlarmViewController.swift; sourceTree = "<group>"; };
+		CC9E36151EB987A100A4E8C6 /* AlarmTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlarmTableViewCell.swift; path = GroupUp/AlarmTableViewCell.swift; sourceTree = "<group>"; };
 		CCC4DF641E7E6BD5000B35FB /* MainMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainMenuViewController.swift; path = GroupUp/MainMenuViewController.swift; sourceTree = "<group>"; };
 		CCC4DF661E7E6E77000B35FB /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = GroupUp/SettingsViewController.swift; sourceTree = "<group>"; };
 		CCC4DF681E7E729F000B35FB /* CreateGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateGroupViewController.swift; path = GroupUp/CreateGroupViewController.swift; sourceTree = "<group>"; };
@@ -91,9 +95,8 @@
 		CC2FA0AE1E7BE8F800FCC57C /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				CC56C8951E7BF8E300AAEE22 /* login_background.png */,
+				CC9E36091EB8C4AB00A4E8C6 /* login_background.jpg */,
 				CC56C8961E7BF8E300AAEE22 /* logo_square.png */,
-				CCC4DF601E7E587D000B35FB /* settings_icon.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -101,7 +104,6 @@
 		CC56C89D1E7D568D00AAEE22 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				CCC4DF6F1E7E8611000B35FB /* AlarmListViewController.swift */,
 				CC56C8C01E7D62DA00AAEE22 /* CreateAccountViewController.swift */,
 				CCC4DF681E7E729F000B35FB /* CreateGroupViewController.swift */,
 				CCC4DF6C1E7E8051000B35FB /* GroupDetailsViewController.swift */,
@@ -111,17 +113,21 @@
 				CCC4DF641E7E6BD5000B35FB /* MainMenuViewController.swift */,
 				50E8EEE61E80BD1600EF42B6 /* MapViewController.swift */,
 				CCC4DF661E7E6E77000B35FB /* SettingsViewController.swift */,
+				CC9E36111EB9358C00A4E8C6 /* ViewDirectionsViewController.swift */,
+				CCC4DF6F1E7E8611000B35FB /* AlarmListViewController.swift */,
+				CC9E36131EB9654800A4E8C6 /* NewAlarmViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
 		};
-		CC56C8A11E7D580600AAEE22 /* TextFields */ = {
+		CC56C8A11E7D580600AAEE22 /* CustomObjects */ = {
 			isa = PBXGroup;
 			children = (
 				CC56C89E1E7D576000AAEE22 /* CreateAccountTextField.swift */,
 				CC56C89B1E7D46F100AAEE22 /* LoginTextField.swift */,
+				CC9E36151EB987A100A4E8C6 /* AlarmTableViewCell.swift */,
 			);
-			name = TextFields;
+			name = CustomObjects;
 			sourceTree = "<group>";
 		};
 		CCC4DF6E1E7E8099000B35FB /* Storyboards */ = {
@@ -148,7 +154,7 @@
 				CCC4DF6E1E7E8099000B35FB /* Storyboards */,
 				CCE2FAD01E74A4E900440D21 /* GroupUp */,
 				CC2FA0AE1E7BE8F800FCC57C /* Images */,
-				CC56C8A11E7D580600AAEE22 /* TextFields */,
+				CC56C8A11E7D580600AAEE22 /* CustomObjects */,
 				CC56C89D1E7D568D00AAEE22 /* ViewControllers */,
 				CC00DA941EB3DDA800345CBF /* HelperFunctions */,
 				CCE2FACF1E74A4E900440D21 /* Products */,
@@ -255,12 +261,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCE2FADF1E74A4E900440D21 /* LaunchScreen.storyboard in Resources */,
-				CCC4DF611E7E587D000B35FB /* settings_icon.png in Resources */,
+				CC9E360A1EB8C4AB00A4E8C6 /* login_background.jpg in Resources */,
 				CCE2FADC1E74A4E900440D21 /* Assets.xcassets in Resources */,
 				6876C4091E9F1B9700CFF880 /* GoogleService-Info.plist in Resources */,
 				CC56C8981E7BF8E300AAEE22 /* logo_square.png in Resources */,
 				CCE2FAD71E74A4E900440D21 /* Main.storyboard in Resources */,
-				CC56C8971E7BF8E300AAEE22 /* login_background.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,14 +324,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC9E36121EB9358C00A4E8C6 /* ViewDirectionsViewController.swift in Sources */,
 				CC56C8C11E7D62DA00AAEE22 /* CreateAccountViewController.swift in Sources */,
 				CCC4DF6B1E7E7FC7000B35FB /* GroupsListTableViewController.swift in Sources */,
 				CC2FA0B41E7BF5F500FCC57C /* LoginViewController.swift in Sources */,
 				CC56C89C1E7D46F100AAEE22 /* LoginTextField.swift in Sources */,
 				CC00DA961EB3DE0100345CBF /* LocationManager.swift in Sources */,
 				CCC4DF701E7E8611000B35FB /* AlarmListViewController.swift in Sources */,
+				CC9E36161EB987A100A4E8C6 /* AlarmTableViewCell.swift in Sources */,
 				CCE2FADA1E74A4E900440D21 /* GroupUp.xcdatamodeld in Sources */,
 				50697AE51E835C5000C383FF /* LocationTableViewController.swift in Sources */,
+				CC9E36141EB9654800A4E8C6 /* NewAlarmViewController.swift in Sources */,
 				50E8EEE71E80BD1600EF42B6 /* MapViewController.swift in Sources */,
 				CCC4DF6D1E7E8051000B35FB /* GroupDetailsViewController.swift in Sources */,
 				CC00DA921EB279E000345CBF /* IJProgressView.swift in Sources */,

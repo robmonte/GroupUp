@@ -21,6 +21,8 @@ class GroupsListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = "Your Groups"
+        
         IJProgressView.shared.showProgressView(self.view)
         loadGroups()
         
@@ -59,9 +61,7 @@ class GroupsListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "groupsListID", for: indexPath)
-        
-//        let groupName:String? = groups[indexPath.row].value(forKey: "groupName") as? String
-//        cell.textLabel?.text = groupName!
+        cell.backgroundColor = self.view.backgroundColor
         
         cell.textLabel?.text = groups[indexPath.row]
         
@@ -86,39 +86,6 @@ class GroupsListTableViewController: UITableViewController {
                 IJProgressView.shared.hideProgressView()
             }
         })
-        
-        
-//        groupsRef.observe(.value, with: { snapshot in
-//            //print(snapshot.value)
-//            print ("checking if group exists!!!")
-//            var exists = snapshot.hasChild("Groups/new")
-//            var glist = snapshot.value
-//            print(glist)
-//        })
-        
-//        print(rootRef.value(forKey: "Groups"))
-        
-//        print(groupsRef.value(forKey: "Groups"))
-        
-//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-//        let managedContext = appDelegate.persistentContainer.viewContext
-//        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"Group")
-//        var fetchedResults:[NSManagedObject]? = nil
-//        
-//        do {
-//            try fetchedResults = managedContext.fetch(fetchRequest) as? [NSManagedObject]
-//        }
-//        catch {
-//            let nserror = error as NSError
-//            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-//            abort()
-//        }
-//        
-//        if let results = fetchedResults {
-//            groups = results
-//        } else {
-//            print("Could not fetch")
-//        }
     }
     
     // MARK: - Navigation

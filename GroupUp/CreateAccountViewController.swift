@@ -44,7 +44,7 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
     }
     
     func setAttributedStyle(text: CreateAccountTextField) {
-        text.attributedPlaceholder = NSAttributedString(string: text.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.lightGray])
+        text.attributedPlaceholder = NSAttributedString(string: text.placeholder!, attributes: [NSForegroundColorAttributeName : UIColor.gray, NSFontAttributeName: UIFont.systemFont(ofSize: 18)])
     }
     
     override func didReceiveMemoryWarning() {

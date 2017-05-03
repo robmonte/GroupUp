@@ -14,6 +14,7 @@ class SettingsViewController: UIViewController {
     @IBOutlet weak var rememberUsernameToggle: UISwitch!
     @IBOutlet weak var refreshLabel: UILabel!
     @IBOutlet weak var refreshStepper: UIStepper!
+    @IBOutlet weak var deleteButton: UIButton!
     
     public var email:String = ""
     public static var refreshRate:Int = 5
@@ -23,7 +24,16 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = "Change Settings"
+        
+        deleteButton.layer.borderWidth = 1.0
+        deleteButton.layer.borderColor = UIColor.red.cgColor
+        deleteButton.layer.cornerRadius = 5
+        
         rememberUsernameToggle.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
+        rememberUsernameToggle.tintColor = UIColor.gray
+        rememberUsernameToggle.backgroundColor = UIColor.gray
+        rememberUsernameToggle.layer.cornerRadius = 16
         
         let check:Bool = defaults.object(forKey: "rememberState") as? Bool ?? false
         if check == true {

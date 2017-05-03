@@ -27,6 +27,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate, CLLocationMana
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        
         let defaults = UserDefaults.standard
         
         emailField.delegate = self
@@ -34,7 +38,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, CLLocationMana
         
         loginButton.layer.cornerRadius = 5
         loginButton.layer.borderWidth = 1
-        loginButton.layer.borderColor = UIColor.gray.cgColor
+        loginButton.layer.borderColor = UIColor(hex: 0x007AFF, alpha: 1.0).cgColor //UIColor(hex: 0x5086E8, alpha: 1.0).cgColor
         
         createAccountButton.titleLabel?.textAlignment = NSTextAlignment.center
         createAccountButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
@@ -78,6 +82,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, CLLocationMana
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        loginButton.isHidden = false
         if(CLLocationManager.locationServicesEnabled()) {
             location.delegate = self
             location.desiredAccuracy = kCLLocationAccuracyBest
@@ -95,9 +100,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, CLLocationMana
     }
     
     @IBAction func loginFirebase(_ sender: Any) {
+        self.loginButton.isHidden = true
         if let email = self.emailField.text, let password = self.passwordField.text {
                 FIRAuth.auth()?.signIn(withEmail: email, password: password) { (user, error) in
                     if error != nil {
+                        self.loginButton.isHidden = false
                         self.popup(title: "Invalid input", message: "Username or password is incorrect. Please try again.")
                         return
                     }
@@ -122,6 +129,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, CLLocationMana
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destinationVC = segue.destination as? MainMenuViewController {
             destinationVC.email = emailField.text!
+            let backItem = UIBarButtonItem()
+            backItem.title = "Log out"
+            navigationItem.backBarButtonItem = backItem
         }
     }
 }

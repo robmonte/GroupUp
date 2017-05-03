@@ -13,6 +13,9 @@ import UserNotifications
 class MainMenuViewController: UIViewController {
     
     @IBOutlet weak var usernameLabel: UILabel!
+    @IBOutlet weak var viewGroupsButton: UIButton!
+    @IBOutlet weak var createGroupButton: UIButton!
+    @IBOutlet weak var settingsButton: UIButton!
     
     public var email:String = ""
     public var username:String = ""
@@ -21,18 +24,53 @@ class MainMenuViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        self.navigationController?.navigationBar.tintColor = UIColor.red
+        
+        self.title = "Main Menu"
+        usernameLabel.text = "Welcome back "
+        
+        viewGroupsButton.layer.cornerRadius = 5
+        viewGroupsButton.layer.borderWidth = 1
+        viewGroupsButton.layer.borderColor = UIColor(hex: 0x007AFF, alpha: 1.0).cgColor
+        
+        createGroupButton.layer.cornerRadius = 5
+        createGroupButton.layer.borderWidth = 1
+        createGroupButton.layer.borderColor = UIColor(hex: 0x007AFF, alpha: 1.0).cgColor
+        
+        settingsButton.layer.cornerRadius = 5
+        settingsButton.layer.borderWidth = 1
+        settingsButton.layer.borderColor = UIColor(hex: 0x007AFF, alpha: 1.0).cgColor
+        
+        let rootRef = FIRDatabase.database().reference()
+        let groupsRef = rootRef.child("Accounts")
+        
+        let query = groupsRef.queryOrdered(byChild: "Email").queryEqual(toValue: email)
+        
+        query.observe(.value, with: { snapshot in
+            let userGroups = snapshot.value as? NSDictionary
+            let retList = userGroups?.allKeys as? [String]
+            print(retList ?? [""])
+            
+            self.username = (retList?[0])!
+            self.usernameLabel.text = "Welcome back \(self.username)"
+            
+            let userRef = groupsRef.child(self.username)
+            userRef.observe(.value, with: { snapshotFirst in
+                let userInfo = snapshotFirst.value as? NSDictionary
+                let first = userInfo?["First"]
+                
+                self.usernameLabel.text = "Welcome back \(first!)"
+                
+                self.viewGroupsButton.isHidden = false
+                self.createGroupButton.isHidden = false
+                self.settingsButton.isHidden = false
+            })
+            
+        })
+
 
         // Do any additional setup after loading the view.
-    }
-    
-    @IBAction func logoutPressed(_ sender: Any) {
-        let firebaseAuth = FIRAuth.auth()
-        do {
-            try firebaseAuth?.signOut()
-            _ = navigationController?.popViewController(animated:true)
-        } catch let signOutError as NSError {
-            print ("Error signing out: %@", signOutError)
-        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -41,12 +79,13 @@ class MainMenuViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated:true)
+        self.navigationController?.setNavigationBarHidden(false, animated:true)
+        self.navigationController?.navigationBar.tintColor = UIColor.red
         
-        handle = FIRAuth.auth()?.addStateDidChangeListener() { (auth, user) in
-            self.usernameLabel.text! = "Welcome back \((user?.displayName!)!)"
-            self.username = (user?.displayName!)!
-        }
+//        handle = FIRAuth.auth()?.addStateDidChangeListener() { (auth, user) in
+//            self.usernameLabel.text! = "Welcome back \((user?.displayName!)!)"
+//            self.username = (user?.displayName!)!
+//        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -63,9 +102,24 @@ class MainMenuViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        self.navigationController?.navigationBar.tintColor = UIColor(hex: 0x007AFF, alpha: 1.0)
+        
         // [START remove_auth_listener]
-        FIRAuth.auth()?.removeStateDidChangeListener(handle!)
+        if let handle = handle {
+            FIRAuth.auth()?.removeStateDidChangeListener(handle)
+        }
         // [END remove_auth_listener]
+        
+        if (self.isMovingFromParentViewController) {
+            let firebaseAuth = FIRAuth.auth()
+            do {
+                try firebaseAuth?.signOut()
+                _ = self.navigationController?.popViewController(animated:true)
+            } catch let signOutError as NSError {
+                print ("Error signing out: %@", signOutError)
+            }
+        }
     }
 
     // MARK: - Navigation
