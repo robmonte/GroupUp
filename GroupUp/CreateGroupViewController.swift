@@ -47,8 +47,6 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
         setDestButton.layer.borderWidth = 1.0
         setDestButton.layer.borderColor = UIColor(hex: 0x007AFF, alpha: 1.0).cgColor
         setDestButton.layer.cornerRadius = 5
-        
-        // Do any additional setup after loading the view.
     }
     
     override func didReceiveMemoryWarning() {
@@ -166,11 +164,9 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
             var exists = false
             let rootRef = FIRDatabase.database().reference()
             rootRef.observe(.value, with: { snapshot in
-                //print(snapshot.value)
                 print ("checking if \(user) exists!!!")
                 exists = snapshot.hasChild("Accounts/\(user)")
                 print(exists)
-                //print(snapshot.childSnapshot(forPath: "Accounts"))
                 
                 if !exists {
                     let noSuchUserAlert = UIAlertController(title:"Invalid input", message:"Username does not exist.", preferredStyle:UIAlertControllerStyle.alert)

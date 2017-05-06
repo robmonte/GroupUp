@@ -26,6 +26,8 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
     private var firstList = [String]()
     private var groups = [NSManagedObject]()
     private var locAddress = ""
+    private var leader = ""
+    private var leaderFirst = ""
     private var destLat:Double = 0.0
     private var destLong:Double = 0.0
     private var destETA = 0.0
@@ -34,7 +36,7 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
     
     public var groupName:String = ""
     
-    weak var timer: Timer?
+    private var timer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,18 +66,19 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
         group.observe(.value, with: { snapshot in
             let userGroup = snapshot.value as? NSDictionary
             let users = userGroup?.allKeys as? [String]
-            let leader = userGroup?.value(forKey: "_@+Leader**") as? String
             
-            self.membersList.append(leader!)
+            self.leader = (userGroup?.value(forKey: "_@+Leader**") as? String)!
             self.addressLabel.text = userGroup?.value(forKey: "_@+Address**") as? String
             self.destHours = (userGroup?.value(forKey: "_@+Hours**") as? Int)!
             self.destMinutes = (userGroup?.value(forKey: "_@+Minutes**") as? Int)!
             self.destLat = (userGroup?.value(forKey: "_@+Latitude**") as? Double)!
             self.destLong = (userGroup?.value(forKey: "_@+Longitude**") as? Double)!
+            
+            self.membersList.append(self.leader)
             print(users!)
             
             for user in users! {
-                if user.characters.first != "_" && user != leader! {
+                if user.characters.first != "_" && user != self.leader {
                     self.membersList.append(user)
                 }
             }
@@ -109,7 +112,6 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
             let address = self.addressLabel.text!.replacingOccurrences(of: "\n", with: " ")
             print("after")
             print(address)
-            
             print("lat: \(self.destLat), long: \(self.destLong)")
             
             let request = MKDirectionsRequest()
@@ -178,7 +180,12 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
                         let userInfo = snapshotFirst.value as? NSDictionary
                         let first = userInfo?["First"]
                         
-                        self.firstList.append(first as! String)
+                        if (self.leader == user) {
+                            self.leaderFirst = first as! String
+                        }
+                        else {
+                            self.firstList.append(first as! String)
+                        }
                         print(self.firstList)
                         DispatchQueue.main.async {
                             self.membersTable.reloadData()
@@ -186,183 +193,8 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
                     })
                 }
             }
-            //print(firstList)
         })
     }
-        
-        
-//     This version gets the location coordinates of the destination from the address
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        
-//        membersTable.delegate = self
-//        membersTable.dataSource = self
-//        
-//        groupNameLabel.text = groupName
-//        print("locAddress is \(locAddress)")
-//        addressLabel.text? = locAddress
-//        
-//        //setupMembersArray()
-//        
-//        
-//        let rootRef = FIRDatabase.database().reference()
-//        let groupsRef = rootRef.child("Groups")
-//        let group = groupsRef.child(groupName)
-//        
-//        group.observe(.value, with: { snapshot in
-//            let userGroup = snapshot.value as? NSDictionary
-//            let users = userGroup?.allKeys as? [String]
-//            let leader = userGroup?.value(forKey: "_@+Leader**") as? String
-//            
-//            self.membersList.append(leader!)
-//            self.addressLabel.text = userGroup?.value(forKey: "_@+Address**") as? String
-//            self.destHours = (userGroup?.value(forKey: "_@+Hours**") as? Int)!
-//            self.destMinutes = (userGroup?.value(forKey: "_@+Minutes**") as? Int)!
-//            self.destLat = (userGroup?.value(forKey: "_@+Latitude**") as? Double)!
-//            self.destLong = (userGroup?.value(forKey: "_@+Longitude**") as? Double)!
-//            print(users!)
-//            
-//            for user in users! {
-//                if user.characters.first != "_" && user != leader! {
-//                    self.membersList.append(user)
-//                }
-//            }
-//            
-//            DispatchQueue.main.async {
-//                self.membersTable.reloadData()
-//            }
-//            
-//            let hours = self.destHours
-//            let minutes = self.destMinutes
-//            let minutesLeadingZero = String(format: "%02d", minutes)
-//            print(hours)
-//            print(minutes)
-//            var hours12 = hours % 12
-//            var amPm = ""
-//            
-//            if hours >= 0 && hours < 12{
-//                amPm = " AM"
-//            }
-//            else {
-//                amPm = " PM"
-//            }
-//            
-//            if hours12 == 0 {
-//                hours12 = 12
-//            }
-//            self.destTimeLabel.text = "\(hours12):\(minutesLeadingZero)" + amPm
-//            
-//            print("address before replace:")
-//            print(self.addressLabel.text!)
-//            let address = self.addressLabel.text!.replacingOccurrences(of: "\n", with: " ")
-//            print("after")
-//            print(address)
-//            
-//            LocationManager.sharedInstance.getReverseGeoCodedLocation(address: address, completionHandler: { (location:CLLocation?, placemark:CLPlacemark?, error:NSError?) in
-//                
-//                if error != nil {
-//                    print((error?.localizedDescription)!)
-//                    return
-//                }
-//                
-//                if placemark == nil {
-//                    print("Location can't be fetched")
-//                    return
-//                }
-//                
-//                let destLat = placemark?.location?.coordinate.latitude
-//                let destLong = placemark?.location?.coordinate.longitude
-//                print("lat: \(destLat!), long: \(destLong!)")
-//                
-//                let request = MKDirectionsRequest()
-//                let destCoordinates = CLLocationCoordinate2DMake(destLat!, destLong!)
-//                let currMapItem = MKMapItem.forCurrentLocation()
-//                let destPlacemark = MKPlacemark(coordinate: destCoordinates)
-//                let destMapItem = MKMapItem(placemark: destPlacemark)
-//                
-//                request.source = currMapItem
-//                request.destination = destMapItem
-//                request.transportType = MKDirectionsTransportType.automobile
-//                request.requestsAlternateRoutes = false
-//                
-//                let directions = MKDirections(request: request)
-//                directions.calculate(completionHandler: { response, error in
-//                    if let route = response?.routes.first {
-//                        print("ETA: \(route.expectedTravelTime)")
-//                        
-//                        let eta = route.expectedTravelTime
-//                        let etaHours = floor(eta / 3600)
-//                        let etaMinutes = floor((eta - etaHours*3600) / 60)
-//                        self.destETA = eta
-//                        
-//                        let calcMin = minutes - Int(etaMinutes)
-//                        let calcHours = hours - Int(etaHours)
-//                        var calcHours12 = calcHours % 12
-//                        
-//                        if calcHours >= 0 && calcHours < 12{
-//                            amPm = " AM"
-//                        }
-//                        else {
-//                            amPm = " PM"
-//                        }
-//                        
-//                        if calcHours12 == 0 {
-//                            calcHours12 = 12
-//                        }
-//                        else if calcHours12 < 0 {
-//                            calcHours12 = 12 + calcHours12
-//                        }
-//                        
-//                        if calcMin < 0 {
-//                            let minLeading = String(format: "%02d", 60 + minutes - Int(etaMinutes))
-//                            self.timeToLeaveLabel.text = "\(calcHours12 - 1):\(minLeading)" + amPm
-//                        }
-//                        else {
-//                            let minLeading = String(format: "%02d", minutes - Int(etaMinutes))
-//                            self.timeToLeaveLabel.text = "\(calcHours12):\(minLeading)" + amPm
-//                        }
-//                        
-//                        self.startTimer()
-//                    }
-//                    else {
-//                        print("Error getting ETA")
-//                    }
-//                })
-//                
-//            })
-//        })
-    
-        
-//        let geocoder = CLGeocoder()
-//        geocoder.geocodeAddressString("2800 Guadalupe St Austin, TX 78705") { (placemarks, error) in
-//            let placemark = placemarks?.first
-//            let destLat = placemark?.location?.coordinate.latitude
-//            let destLong = placemark?.location?.coordinate.longitude
-//            print("lat: \(destLat)")
-//            print("long: \(destLong)")
-//            let destCoordinates = CLLocationCoordinate2DMake(destLat!, destLong!)
-//            
-//            let request = MKDirectionsRequest()
-//            let currMapItem = MKMapItem.forCurrentLocation()
-//            let destPlacemark = MKPlacemark(coordinate: destCoordinates)
-//            let destMapItem = MKMapItem(placemark: destPlacemark)
-//            
-//            request.source = currMapItem
-//            request.destination = destMapItem
-//            request.transportType = MKDirectionsTransportType.automobile
-//            request.requestsAlternateRoutes = false
-//            
-//            let directions = MKDirections(request: request)
-//            directions.calculate(completionHandler: { response, error in
-//                if let route = response?.routes.first {
-//                    print("ETA: \(route.expectedTravelTime)")
-//                }
-//                else {
-//                    print("Error getting ETA")
-//                }
-//            })
-//        }
-//    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -384,15 +216,15 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
         
         if indexPath.row == 0 {
             if firstList.count > indexPath.row {
-                cell.textLabel?.text = "Leader: " + firstList[indexPath.row]
+                cell.textLabel?.text = "Leader: " + leaderFirst
             }
             else {
-                cell.textLabel?.text = "Leader: " + membersList[indexPath.row]
+                cell.textLabel?.text = "Leader: " + leader
             }
         }
         else {
-            if firstList.count > indexPath.row {
-                cell.textLabel?.text = firstList[indexPath.row]
+            if firstList.count >= indexPath.row {
+                cell.textLabel?.text = firstList[indexPath.row-1]
             }
             else {
                 cell.textLabel?.text = membersList[indexPath.row]
@@ -405,6 +237,7 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
     func startTimer() {
         print("Notification every 60*\(SettingsViewController.refreshRate) seconds")
         timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(60 * SettingsViewController.refreshRate), repeats: true) { [weak self] _ in
+            print("starting timer")
             
             let request = MKDirectionsRequest()
             let destCoordinates = CLLocationCoordinate2DMake((self?.destLat)!, (self?.destLong)!)
@@ -421,7 +254,6 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
             directions.calculate(completionHandler: { response, error in
                 if let route = response?.routes.first {
                     print("ETA in timer: \(route.expectedTravelTime)")
-                    
                     let eta = route.expectedTravelTime
                     
                     let date = Date()
@@ -433,31 +265,57 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
                     let currSeconds:Double = Double((hours*3600) + (minutes*60) + seconds)
                     let destTimeSeconds:Double = Double(((self?.destHours)!*3600) + ((self?.destMinutes)!*60))
                     
-                    print("current time: \(hours):\(minutes):\(seconds)")
                     print("current time in seconds: \(currSeconds)")
-                    print("curr time + eta seconds: \(currSeconds+eta)")
                     print("curr time + eta + 60*refresh rate: \(currSeconds + eta + Double(60*SettingsViewController.refreshRate))")
-                    print("dest time in seconds \(destTimeSeconds)")
+                    print("dest time in seconds \(destTimeSeconds)\n")
                     
+                    for alarm in AlarmListViewController.alarmList {
+                        print("curr time + eta + alarm.time + 60*refresh rate: \(currSeconds + eta + alarm.time + Double(60*SettingsViewController.refreshRate))")
+                        print("alarm time for \(alarm.time) which is \(alarm.hour):\(alarm.minute) before\n")
+                        if (alarm.active && ((currSeconds + eta + alarm.time + Double(60*SettingsViewController.refreshRate)) >= destTimeSeconds) && (currSeconds < destTimeSeconds)) {
+                            
+                            let center = UNUserNotificationCenter.current()
+                            var notifyComponents = DateComponents()
+                            
+                            notifyComponents.hour = hours
+                            notifyComponents.minute = minutes + 2 - SettingsViewController.refreshRate
+                            
+                            print("\t\nsetting alarm for \(alarm.name) at \(hours):\(minutes+2 - SettingsViewController.refreshRate)\n")
+                            
+                            let trigger = UNCalendarNotificationTrigger(dateMatching: notifyComponents, repeats: false)
+                            let content = UNMutableNotificationContent()
+                            
+                            content.title = alarm.name
+                            content.body = alarm.descript
+                            content.categoryIdentifier = alarm.uuid
+                            content.sound = UNNotificationSound.default()
+                            
+                            let request = UNNotificationRequest(identifier: alarm.uuid, content: content, trigger: trigger)
+                            
+                            center.add(request)
+                            
+                            alarm.active = false
+                        }
+                    }
                     
                     if ((currSeconds + eta + Double(60*SettingsViewController.refreshRate)) >= destTimeSeconds && currSeconds < destTimeSeconds) {
-                        print("Setting notification for \(hours):\(minutes+1)")
+                        print("\t\nSetting notification for TTL at \(hours):\(minutes+2 - SettingsViewController.refreshRate)\n")
                         
                         let center = UNUserNotificationCenter.current()
                         var notifyComponents = DateComponents()
                         
                         notifyComponents.hour = hours
-                        notifyComponents.minute = minutes + 2 - (60*SettingsViewController.refreshRate)
+                        notifyComponents.minute = minutes + 2 - SettingsViewController.refreshRate
                         
                         let trigger = UNCalendarNotificationTrigger(dateMatching: notifyComponents, repeats: false)
                         let content = UNMutableNotificationContent()
                         
                         content.title = "Time to leave!"
-                        content.body = "It's time to head out! It is now the optimal time to leave to arrive at the desired time."
-                        content.categoryIdentifier = "groupUpTTL"
+                        content.body = "It's time to head out! It is now the optimal time to leave so you can arrive at the desired time."
+                        content.categoryIdentifier = "groupUpTTL\(String(describing: self?.groupName))"
                         content.sound = UNNotificationSound.default()
                         
-                        let request = UNNotificationRequest(identifier: "groupUpTTL", content: content, trigger: trigger)
+                        let request = UNNotificationRequest(identifier: "groupUpTTL\(String(describing: self?.groupName))", content: content, trigger: trigger)
                         
                         center.add(request)
                         

@@ -71,14 +71,13 @@ class GroupsListTableViewController: UITableViewController {
     func loadGroups() {
         let rootRef = FIRDatabase.database().reference()
         let groupsRef = rootRef.child("Groups")
-        
         let query = groupsRef.queryOrdered(byChild: username).queryEqual(toValue: username)
         
         query.observe(.value, with: { snapshot in
             let userGroups = snapshot.value as? NSDictionary
             let retList = userGroups?.allKeys as? [String]
-            print(retList ?? [""])
             
+            print(retList ?? [""])
             self.groups = retList ?? [""]
             
             DispatchQueue.main.async {
@@ -95,7 +94,6 @@ class GroupsListTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
         if let destinationVC = segue.destination as? GroupDetailsViewController {
             let index = tableView.indexPathForSelectedRow?.row
-            //let groupName:String? = groups[index!].value(forKey: "groupName") as? String
             let groupName:String = groups[index!]
             
             destinationVC.groupName = groupName

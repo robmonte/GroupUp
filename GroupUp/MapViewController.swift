@@ -51,9 +51,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
         locationSearchController?.hidesNavigationBarDuringPresentation = false
         locationSearchController?.dimsBackgroundDuringPresentation = true
         definesPresentationContext = true
-        
         locationSearchTable.mapView = mapView
-        
         locationSearchTable.handleMapSearchDelegate = self
     }
 
@@ -64,7 +62,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
             let location = locations.last
-        
             let center = CLLocationCoordinate2D(latitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!)
             let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         
@@ -125,12 +122,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
                         let state = addressDict?["State"] ?? ""
                         let zip = addressDict?["ZIP"] ?? ""
                         let address = "\(street)\n\(city), \(state) \(zip)"
-                        
-                        //let etaInfoDict: [String: Any] = ["ETA": (route?.expectedTravelTime)! , "Address": address]
+
                         self.setAddress = address
-                        
-                        //NotificationCenter.default.post(name: Notification.Name(rawValue: "setRoute"), object: nil, userInfo: etaInfoDict)
-                        
                         let alertController = UIAlertController(title: "Destination Set", message: "Destination has been set.", preferredStyle: UIAlertControllerStyle.alert)
                         
                         let OK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
@@ -187,12 +180,9 @@ class MapViewController: UIViewController, CLLocationManagerDelegate{
 
 extension MapViewController: HandleMapSearch {
     func dropPinZoomIn(placemark:MKPlacemark){
-        // cache the pin
         selectedPin = placemark
-        // clear existing pins
         
         self.mapView.removeOverlays(self.mapView.overlays)
-
         mapView.removeAnnotations(mapView.annotations)
         let annotation = MKPointAnnotation()
         

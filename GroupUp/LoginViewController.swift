@@ -15,7 +15,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, CLLocationMana
 
     @IBOutlet weak var emailField: LoginTextField!
     @IBOutlet weak var passwordField: LoginTextField!
-    
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var createAccountButton: UIButton!
     

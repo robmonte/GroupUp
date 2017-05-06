@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 protocol AlarmCellDelegate {
     func didChangeSwitchState(_ sender: AlarmTableViewCell, isOn: Bool)
@@ -109,8 +110,6 @@ class AlarmListViewController: UIViewController, UITableViewDelegate, UITableVie
         
         alarmsTable.delegate = self
         alarmsTable.dataSource = self
-        
-        // Do any additional setup after loading the view.
     }
     
     func addAlarmNotification() {
@@ -133,10 +132,14 @@ class AlarmListViewController: UIViewController, UITableViewDelegate, UITableVie
     func didChangeSwitchState(_ sender: AlarmTableViewCell, isOn: Bool) {
         let indexPath = self.alarmsTable.indexPath(for: sender)
         
-        print("state changed at \(indexPath?.row)")
+        print("state changed at \(String(describing: indexPath?.row))")
         
         AlarmListViewController.alarmList[(indexPath?.row)!].active = isOn
         saveAlarms()
+        
+        if (isOn == false) {
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [AlarmListViewController.alarmList[(indexPath?.row)!].uuid])
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -156,7 +159,6 @@ class AlarmListViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "alarmsID", for: indexPath) as! AlarmTableViewCell
         
-        // Configure the cell...
         cell.nameLabel?.text = AlarmListViewController.alarmList[indexPath.row].name
         let hour = String(format: "%02d", AlarmListViewController.alarmList[indexPath.row].hour % 12)
         let minute = String(format: "%02d", AlarmListViewController.alarmList[indexPath.row].minute)

@@ -187,7 +187,7 @@ class ViewDirectionsViewController: UIViewController, CLLocationManagerDelegate,
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         
         pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-        pinView?.pinTintColor = UIColor.orange
+        pinView?.pinTintColor = UIColor.red
         pinView?.canShowCallout = true
         
         let smallSquare = CGSize(width: 50, height: 35)

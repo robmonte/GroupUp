@@ -25,8 +25,6 @@ class MainMenuViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        self.navigationController?.navigationBar.tintColor = UIColor.red
-        
         self.title = "Main Menu"
         usernameLabel.text = "Welcome back "
         
@@ -44,7 +42,6 @@ class MainMenuViewController: UIViewController {
         
         let rootRef = FIRDatabase.database().reference()
         let groupsRef = rootRef.child("Accounts")
-        
         let query = groupsRef.queryOrdered(byChild: "Email").queryEqual(toValue: email)
         
         query.observe(.value, with: { snapshot in
@@ -81,11 +78,6 @@ class MainMenuViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated:true)
         self.navigationController?.navigationBar.tintColor = UIColor.red
-        
-//        handle = FIRAuth.auth()?.addStateDidChangeListener() { (auth, user) in
-//            self.usernameLabel.text! = "Welcome back \((user?.displayName!)!)"
-//            self.username = (user?.displayName!)!
-//        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

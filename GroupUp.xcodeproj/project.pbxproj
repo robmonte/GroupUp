@@ -104,6 +104,7 @@
 		CC56C89D1E7D568D00AAEE22 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				CCC4DF6F1E7E8611000B35FB /* AlarmListViewController.swift */,
 				CC56C8C01E7D62DA00AAEE22 /* CreateAccountViewController.swift */,
 				CCC4DF681E7E729F000B35FB /* CreateGroupViewController.swift */,
 				CCC4DF6C1E7E8051000B35FB /* GroupDetailsViewController.swift */,
@@ -112,10 +113,9 @@
 				CC2FA0B31E7BF5F500FCC57C /* LoginViewController.swift */,
 				CCC4DF641E7E6BD5000B35FB /* MainMenuViewController.swift */,
 				50E8EEE61E80BD1600EF42B6 /* MapViewController.swift */,
+				CC9E36131EB9654800A4E8C6 /* NewAlarmViewController.swift */,
 				CCC4DF661E7E6E77000B35FB /* SettingsViewController.swift */,
 				CC9E36111EB9358C00A4E8C6 /* ViewDirectionsViewController.swift */,
-				CCC4DF6F1E7E8611000B35FB /* AlarmListViewController.swift */,
-				CC9E36131EB9654800A4E8C6 /* NewAlarmViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -123,9 +123,9 @@
 		CC56C8A11E7D580600AAEE22 /* CustomObjects */ = {
 			isa = PBXGroup;
 			children = (
+				CC9E36151EB987A100A4E8C6 /* AlarmTableViewCell.swift */,
 				CC56C89E1E7D576000AAEE22 /* CreateAccountTextField.swift */,
 				CC56C89B1E7D46F100AAEE22 /* LoginTextField.swift */,
-				CC9E36151EB987A100A4E8C6 /* AlarmTableViewCell.swift */,
 			);
 			name = CustomObjects;
 			sourceTree = "<group>";
@@ -174,11 +174,11 @@
 		CCE2FAD01E74A4E900440D21 /* GroupUp */ = {
 			isa = PBXGroup;
 			children = (
-				CCE2FAD11E74A4E900440D21 /* AppDelegate.swift */,
 				CCE2FADB1E74A4E900440D21 /* Assets.xcassets */,
+				CCE2FAD11E74A4E900440D21 /* AppDelegate.swift */,
+				6876C4081E9F1B9700CFF880 /* GoogleService-Info.plist */,
 				CCE2FAD81E74A4E900440D21 /* GroupUp.xcdatamodeld */,
 				CCE2FAE01E74A4E900440D21 /* Info.plist */,
-				6876C4081E9F1B9700CFF880 /* GoogleService-Info.plist */,
 			);
 			path = GroupUp;
 			sourceTree = "<group>";
