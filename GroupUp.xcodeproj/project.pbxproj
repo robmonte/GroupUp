@@ -14,6 +14,8 @@
 		CC00DA921EB279E000345CBF /* IJProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC00DA911EB279E000345CBF /* IJProgressView.swift */; };
 		CC00DA961EB3DE0100345CBF /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC00DA951EB3DE0100345CBF /* LocationManager.swift */; };
 		CC2FA0B41E7BF5F500FCC57C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2FA0B31E7BF5F500FCC57C /* LoginViewController.swift */; };
+		CC32763E1ED2906E00348FE8 /* PRIVACY.txt in Resources */ = {isa = PBXBuildFile; fileRef = CC32763C1ED2906E00348FE8 /* PRIVACY.txt */; };
+		CC32763F1ED2906E00348FE8 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = CC32763D1ED2906E00348FE8 /* README.txt */; };
 		CC56C8981E7BF8E300AAEE22 /* logo_square.png in Resources */ = {isa = PBXBuildFile; fileRef = CC56C8961E7BF8E300AAEE22 /* logo_square.png */; };
 		CC56C89C1E7D46F100AAEE22 /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC56C89B1E7D46F100AAEE22 /* LoginTextField.swift */; };
 		CC56C89F1E7D576000AAEE22 /* CreateAccountTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC56C89E1E7D576000AAEE22 /* CreateAccountTextField.swift */; };
@@ -44,6 +46,8 @@
 		CC00DA911EB279E000345CBF /* IJProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IJProgressView.swift; path = GroupUp/IJProgressView.swift; sourceTree = "<group>"; };
 		CC00DA951EB3DE0100345CBF /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationManager.swift; path = GroupUp/LocationManager.swift; sourceTree = "<group>"; };
 		CC2FA0B31E7BF5F500FCC57C /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = GroupUp/LoginViewController.swift; sourceTree = "<group>"; };
+		CC32763C1ED2906E00348FE8 /* PRIVACY.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PRIVACY.txt; sourceTree = SOURCE_ROOT; };
+		CC32763D1ED2906E00348FE8 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = SOURCE_ROOT; };
 		CC56C8961E7BF8E300AAEE22 /* logo_square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo_square.png; path = GroupUp/logo_square.png; sourceTree = "<group>"; };
 		CC56C89B1E7D46F100AAEE22 /* LoginTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginTextField.swift; path = GroupUp/LoginTextField.swift; sourceTree = "<group>"; };
 		CC56C89E1E7D576000AAEE22 /* CreateAccountTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateAccountTextField.swift; path = GroupUp/CreateAccountTextField.swift; sourceTree = "<group>"; };
@@ -174,6 +178,8 @@
 		CCE2FAD01E74A4E900440D21 /* GroupUp */ = {
 			isa = PBXGroup;
 			children = (
+				CC32763C1ED2906E00348FE8 /* PRIVACY.txt */,
+				CC32763D1ED2906E00348FE8 /* README.txt */,
 				CCE2FADB1E74A4E900440D21 /* Assets.xcassets */,
 				CCE2FAD11E74A4E900440D21 /* AppDelegate.swift */,
 				6876C4081E9F1B9700CFF880 /* GoogleService-Info.plist */,
@@ -260,11 +266,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC32763E1ED2906E00348FE8 /* PRIVACY.txt in Resources */,
 				CCE2FADF1E74A4E900440D21 /* LaunchScreen.storyboard in Resources */,
 				CC9E360A1EB8C4AB00A4E8C6 /* login_background.jpg in Resources */,
 				CCE2FADC1E74A4E900440D21 /* Assets.xcassets in Resources */,
 				6876C4091E9F1B9700CFF880 /* GoogleService-Info.plist in Resources */,
 				CC56C8981E7BF8E300AAEE22 /* logo_square.png in Resources */,
+				CC32763F1ED2906E00348FE8 /* README.txt in Resources */,
 				CCE2FAD71E74A4E900440D21 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

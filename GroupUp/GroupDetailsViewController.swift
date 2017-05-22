@@ -114,6 +114,10 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
             print(address)
             print("lat: \(self.destLat), long: \(self.destLong)")
             
+            print("open address button should be hidden")
+            self.openAddressButton.isHidden = false
+            print("set open address button to visible")
+            
             let request = MKDirectionsRequest()
             let destCoordinates = CLLocationCoordinate2DMake(self.destLat, self.destLong)
             let currMapItem = MKMapItem.forCurrentLocation()

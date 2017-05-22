@@ -1,0 +1,9 @@
+GroupUp Privacy Policy
+
+GroupUp requests access to a device's location and notification features.
+
+Location: The location (GPS) is required for the tracking of user location, traffic data, and ETA (estimated time of arrival) calculations to the destination. This permission is required to run any meaningful function of the app at all and cannot be safely denied.
+
+Notifications: The notification system is required to alert the user when it is TTL (time to leave) as well as triggering any custom alarms set for a group within the app. This permission may be safely denied if the user wishes to check the TTL manually every so often to leave but then you will not be reminded by the system!
+
+In addition to the two requested features, the app utilizes network connectivity to connect to a server to handle accounts and groups. This is required to be able to establish groups with other users and for destination location and time data to be shared. No personal data is shared, sold, or used in any other way by GroupUp. The servers are Firebase by Google which may be subject to Google’s own data terms of service apart from GroupUp.
