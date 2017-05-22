@@ -59,7 +59,7 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
         addressLabel.text? = locAddress
         loadAlarms(passedGroup: groupName)
         
-        let rootRef = FIRDatabase.database().reference()
+        let rootRef = Database.database().reference()
         let groupsRef = rootRef.child("Groups")
         let group = groupsRef.child(groupName)
         
@@ -170,7 +170,7 @@ class GroupDetailsViewController: UIViewController, UITableViewDelegate, UITable
                 
             })
             
-            let rootRef = FIRDatabase.database().reference()
+            let rootRef = Database.database().reference()
             let groupsRef = rootRef.child("Accounts")
             
             for user in users! {

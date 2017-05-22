@@ -69,7 +69,7 @@ class GroupsListTableViewController: UITableViewController {
     }
     
     func loadGroups() {
-        let rootRef = FIRDatabase.database().reference()
+        let rootRef = Database.database().reference()
         let groupsRef = rootRef.child("Groups")
         let query = groupsRef.queryOrdered(byChild: username).queryEqual(toValue: username)
         

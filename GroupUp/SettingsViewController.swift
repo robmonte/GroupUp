@@ -103,7 +103,7 @@ class SettingsViewController: UIViewController {
     }
     
     @IBAction func deleteAccount(_ sender: Any) {
-        let user = FIRAuth.auth()?.currentUser
+        let user = Auth.auth().currentUser
         
         user?.delete { error in
             if let error = error {

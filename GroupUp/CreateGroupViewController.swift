@@ -104,7 +104,7 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
             self.present(alert, animated:true)
         }
         else {
-            let myRootRef = FIRDatabase.database().reference()
+            let myRootRef = Database.database().reference()
             var exists = false
             
             let date = destTimePicker.date
@@ -122,7 +122,7 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
                     self.present(alert, animated:true)
                 }
                 else {
-                    let rootRef = FIRDatabase.database().reference()
+                    let rootRef = Database.database().reference()
                     let groupsRef = rootRef.child("Groups")
                     let newRef = groupsRef.child(self.groupNameField.text!)
                     
@@ -162,7 +162,7 @@ class CreateGroupViewController: UIViewController, UITextFieldDelegate, UITableV
             let user:String = (addUserField?.text)!
  
             var exists = false
-            let rootRef = FIRDatabase.database().reference()
+            let rootRef = Database.database().reference()
             rootRef.observe(.value, with: { snapshot in
                 print ("checking if \(user) exists!!!")
                 exists = snapshot.hasChild("Accounts/\(user)")

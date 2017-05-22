@@ -101,12 +101,12 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
             popup(title: "Invalid Input", message: "Passwords do not match.")
         }
         else {
-            FIRAuth.auth()?.createUser(withEmail: emailField.text!, password: passwordField.text!) { (user, error) in
+            Auth.auth().createUser(withEmail: emailField.text!, password: passwordField.text!) { (user, error) in
                 if let error = error {
                     self.popup(title: "Error", message: error.localizedDescription)
                     return
                 }
-                let changeRequest = user?.profileChangeRequest()
+                let changeRequest = user?.createProfileChangeRequest()
                 changeRequest?.displayName = self.usernameField.text!
                 changeRequest?.commitChanges() {(error) in
                     if let error = error {
@@ -115,7 +115,7 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
                     }
                 }
                 
-                let rootRef = FIRDatabase.database().reference()
+                let rootRef = Database.database().reference()
                 let accountsRef = rootRef.child("Accounts")
                 let newRef = accountsRef.child(self.usernameField.text!)
                 let user:[String: String] = ["Username": self.usernameField.text!, "Email": self.emailField.text!, "First": self.firstField.text!, "Last": self.lastField.text!]

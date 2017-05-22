@@ -101,7 +101,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, CLLocationMana
     @IBAction func loginFirebase(_ sender: Any) {
         self.loginButton.isHidden = true
         if let email = self.emailField.text, let password = self.passwordField.text {
-                FIRAuth.auth()?.signIn(withEmail: email, password: password) { (user, error) in
+                Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
                     if error != nil {
                         self.loginButton.isHidden = false
                         self.popup(title: "Invalid input", message: "Username or password is incorrect. Please try again.")

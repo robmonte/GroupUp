@@ -20,7 +20,7 @@ class MainMenuViewController: UIViewController {
     public var email:String = ""
     public var username:String = ""
     
-    var handle: FIRAuthStateDidChangeListenerHandle?
+    var handle: AuthStateDidChangeListenerHandle?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +40,7 @@ class MainMenuViewController: UIViewController {
         settingsButton.layer.borderWidth = 1
         settingsButton.layer.borderColor = UIColor(hex: 0x007AFF, alpha: 1.0).cgColor
         
-        let rootRef = FIRDatabase.database().reference()
+        let rootRef = Database.database().reference()
         let groupsRef = rootRef.child("Accounts")
         let query = groupsRef.queryOrdered(byChild: "Email").queryEqual(toValue: email)
         
@@ -99,14 +99,14 @@ class MainMenuViewController: UIViewController {
         
         // [START remove_auth_listener]
         if let handle = handle {
-            FIRAuth.auth()?.removeStateDidChangeListener(handle)
+            Auth.auth().removeStateDidChangeListener(handle)
         }
         // [END remove_auth_listener]
         
         if (self.isMovingFromParentViewController) {
-            let firebaseAuth = FIRAuth.auth()
+            let firebaseAuth = Auth.auth()
             do {
-                try firebaseAuth?.signOut()
+                try firebaseAuth.signOut()
                 _ = self.navigationController?.popViewController(animated:true)
             } catch let signOutError as NSError {
                 print ("Error signing out: %@", signOutError)
